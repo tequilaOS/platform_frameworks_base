@@ -5788,6 +5788,12 @@ public final class Settings {
          * the setting value. See an example above.
          */
 
+        /**
+         * Whether to display 4G icon instead LTE
+         * @hide
+         */
+        public static final String SHOW_FOURG_ICON = "show_fourg_icon";
+
        /**
          * Whether or not volume button music controls should be enabled to seek media tracks
          * @hide
