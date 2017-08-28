@@ -5538,6 +5538,11 @@ public final class Settings {
         public static final String MULTI_AUDIO_FOCUS_ENABLED = "multi_audio_focus_enabled";
 
         /**
+         * @hide
+         */
+        public static final String GLOBAL_ACTIONS_LIST = "global_actions_list";
+
+        /**
          * Whether desktop mode is enabled or not.
          * 0 = off
          * 1 = on
@@ -5620,6 +5625,11 @@ public final class Settings {
          * @hide
          */
         public static final String VIBRATE_ON_DISCONNECT = "vibrate_on_disconnect";
+
+        /**
+         * @hide
+         */
+        public static final String ADVANCED_REBOOT = "advanced_reboot";
 
         /**
          * Keys we no longer back up under the current schema, but want to continue to
@@ -10444,6 +10454,11 @@ public final class Settings {
          */
         @Readable
         public static final String NOTIFICATION_DISMISS_RTL = "notification_dismiss_rtl";
+
+        /**
+         * @hide
+         */
+        public static final String ADVANCED_REBOOT = "advanced_reboot";
 
         /**
          * Comma separated list of QS tiles that have been auto-added already.
