@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2022 tequilaOS Project
+     Copyright (C) 2023 tequilaOS Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
      limitations under the License.
 -->
 <resources>
-    <!-- Face unlock -->
-    <string name="face_unlock_disabled_idle">Face unlock disabled due to inactivity</string>
-
-    <!-- Global actions -->
-    <string name="reboot_to_bootloader_title">Reboot bootloader</string>
-    <string name="reboot_to_bootloader_message">Rebooting to bootloader\u2026</string>
-    <string name="reboot_to_recovery_title">Reboot recovery</string>
-    <string name="reboot_to_recovery_message">Rebooting to recovery\u2026</string>
-    <string name="reboot_system_title">Restart system</string>
-    <string name="reboot_system_message">Restarting system\u2026</string>
+    <!-- Power Menu Reboot -->
+    <string-array translatable="false" name="config_rebootActionsList">
+        <item>restart</item>
+        <item>reboot_recovery</item>
+        <item>reboot_bootloader</item>
+    </string-array>
 </resources>
