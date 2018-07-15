@@ -218,5 +218,6 @@ public class SystemSettingsValidators {
         VALIDATORS.put(System.NAVIGATION_BAR_INVERSE, BOOLEAN_VALIDATOR);
         VALIDATORS.put(System.ENABLE_RIPPLE_EFFECT, BOOLEAN_VALIDATOR);
         VALIDATORS.put(System.STATUS_BAR_CLOCK, new InclusiveIntegerRangeValidator(0, 2));
+        VALIDATORS.put(System.STATUS_BAR_AM_PM, new InclusiveIntegerRangeValidator(0, 2));
     }
 }
