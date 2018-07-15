@@ -97,5 +97,6 @@ public class SystemSettings {
         Settings.System.NAVIGATION_BAR_INVERSE,
         Settings.System.ENABLE_RIPPLE_EFFECT,
         Settings.System.STATUS_BAR_CLOCK,
+        Settings.System.STATUS_BAR_AM_PM,
     };
 }
