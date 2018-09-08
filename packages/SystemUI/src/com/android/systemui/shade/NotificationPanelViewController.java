@@ -213,6 +213,7 @@ import com.android.systemui.statusbar.policy.KeyguardUserSwitcherController;
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcherView;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import com.android.systemui.statusbar.window.StatusBarWindowStateController;
+import com.android.systemui.tuner.TunerService;
 import com.android.systemui.unfold.SysUIUnfoldComponent;
 import com.android.systemui.util.Compile;
 import com.android.systemui.util.LargeScreenUtils;
@@ -308,6 +309,8 @@ public final class NotificationPanelViewController extends PanelViewController {
 
     private static final String DOUBLE_TAP_SLEEP_GESTURE =
             "system:" + Settings.System.DOUBLE_TAP_SLEEP_GESTURE;
+    private static final String DOUBLE_TAP_SLEEP_LOCKSCREEN =
+            "system:" + Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN;
 
     private static final Rect M_DUMMY_DIRTY_RECT = new Rect(0, 0, 1, 1);
     private static final Rect EMPTY_RECT = new Rect();
@@ -350,6 +353,8 @@ public final class NotificationPanelViewController extends PanelViewController {
     private float mKeyguardNotificationTopPadding;
     /** Current max allowed keyguard notifications determined by measuring the panel. */
     private int mMaxAllowedKeyguardNotifications;
+
+    private final TunerService mTunerService;
 
     private KeyguardQsUserSwitchController mKeyguardQsUserSwitchController;
     private KeyguardUserSwitcherController mKeyguardUserSwitcherController;
@@ -534,6 +539,8 @@ public final class NotificationPanelViewController extends PanelViewController {
     private final int mDisplayId;
     private boolean mDoubleTapToSleepEnabled;
     private GestureDetector mDoubleTapGesture;
+
+    private boolean mIsLockscreenDoubleTapEnabled;
 
     private KeyguardIndicationController mKeyguardIndicationController;
     private int mHeadsUpInset;
@@ -832,6 +839,7 @@ public final class NotificationPanelViewController extends PanelViewController {
                 LargeScreenUtils.shouldUseSplitNotificationShade(mResources);
         mView.setWillNotDraw(!DEBUG_DRAWABLE);
         mLargeScreenShadeHeaderController = largeScreenShadeHeaderController;
+        mTunerService = tunerService;
         mLayoutInflater = layoutInflater;
         mFeatureFlags = featureFlags;
         mFalsingManager = falsingManager;
@@ -4261,7 +4269,10 @@ public final class NotificationPanelViewController extends PanelViewController {
                     return false;
                 }
 
-                if (mDoubleTapToSleepEnabled && !mPulsing && !mDozing) {
+                if ((mIsLockscreenDoubleTapEnabled && !mPulsing && !mDozing
+                        && mBarState == StatusBarState.KEYGUARD) ||
+                        (!mQsExpanded && mDoubleTapToSleepEnabled
+                        && event.getY() < mStatusBarHeaderHeightKeyguard)) {
                     mDoubleTapGesture.onTouchEvent(event);
                 }
 
@@ -4802,7 +4813,8 @@ public final class NotificationPanelViewController extends PanelViewController {
         positionClockAndNotifications(true /* forceUpdate */);
     }
 
-    private class OnAttachStateChangeListener implements View.OnAttachStateChangeListener {
+    private class OnAttachStateChangeListener implements View.OnAttachStateChangeListener,
+                TunerService.Tunable {
         @Override
         public void onViewAttachedToWindow(View v) {
             mFragmentService.getFragmentHostManager(mView)
@@ -4811,6 +4823,7 @@ public final class NotificationPanelViewController extends PanelViewController {
             mStatusBarStateListener.onStateChanged(mStatusBarStateController.getState());
             mConfigurationController.addCallback(mConfigurationListener);
             mTunerService.addTunable(this, DOUBLE_TAP_SLEEP_GESTURE);
+            mTunerService.addTunable(this, DOUBLE_TAP_SLEEP_LOCKSCREEN);
             // Theme might have changed between inflating this view and attaching it to the
             // window, so
             // force a call to onThemeChanged
@@ -4827,6 +4840,7 @@ public final class NotificationPanelViewController extends PanelViewController {
                     .removeTagListener(QS.TAG, mFragmentListener);
             mStatusBarStateController.removeCallback(mStatusBarStateListener);
             mConfigurationController.removeCallback(mConfigurationListener);
+            mTunerService.removeTunable(this);
             mFalsingManager.removeTapListener(mFalsingTapListener);
         }
 
@@ -4836,7 +4850,11 @@ public final class NotificationPanelViewController extends PanelViewController {
                 case DOUBLE_TAP_SLEEP_GESTURE:
 		    mDoubleTapToSleepEnabled =
                     TunerService.parseIntegerSwitch(newValue, true);
-		    break;
+                    break;
+                case DOUBLE_TAP_SLEEP_LOCKSCREEN:
+                    mIsLockscreenDoubleTapEnabled =
+                    TunerService.parseIntegerSwitch(newValue, true);
+                    break;
                 default:
                     break;
             }
