@@ -5497,11 +5497,41 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_STATE = "network_traffic_state";
 
         /**
+    	 * What to show in network traffic indicator in statusbar
+    	 * @hide
+    	 */
+        @Readable
+        public static final String NETWORK_TRAFFIC_TYPE = "network_traffic_type";
+
+        /**
          * Network traffic inactivity threshold (default is 1 kBs)
          * @hide
          */
         @Readable
         public static final String NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD = "network_traffic_autohide_threshold";
+
+        /**
+         * Whether to disable showing arrows in statusbar network traffic indicators
+         * @hide
+         */
+        @Readable
+        public static final String NETWORK_TRAFFIC_ARROW = "network_traffic_arrow";
+
+        /**
+         * What size to show for network traffic indicator in statusbar
+         * @hide
+         */
+        @Readable
+        public static final String NETWORK_TRAFFIC_FONT_SIZE = "network_traffic_font_size";
+
+        /**
+         * Show network traffic indicator
+         * 0 - Statusbar (default)
+         * 1 - QS Header
+         * @hide
+         */
+        @Readable
+        public static final String NETWORK_TRAFFIC_VIEW_LOCATION = "network_traffic_view_location";
 
         /**
          * IMPORTANT: If you add a new public settings you also have to add it to
@@ -5639,7 +5669,11 @@ public final class Settings {
             PRIVATE_SETTINGS.add(DISPLAY_COLOR_MODE);
             PRIVATE_SETTINGS.add(DISPLAY_COLOR_MODE_VENDOR_HINT);
             PRIVATE_SETTINGS.add(NETWORK_TRAFFIC_STATE);
+            PRIVATE_SETTINGS.add(NETWORK_TRAFFIC_TYPE);
             PRIVATE_SETTINGS.add(NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD);
+            PRIVATE_SETTINGS.add(NETWORK_TRAFFIC_ARROW);
+            PRIVATE_SETTINGS.add(NETWORK_TRAFFIC_FONT_SIZE);
+            PRIVATE_SETTINGS.add(NETWORK_TRAFFIC_VIEW_LOCATION);
         }
 
         /**
