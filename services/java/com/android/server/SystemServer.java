@@ -245,6 +245,9 @@ import java.util.concurrent.Future;
 // LineageHardware
 import com.android.server.tequila.LineageHardwareService;
 
+// LiveDisplay
+import com.android.server.tequila.display.LiveDisplayService;
+
 /**
  * Entry point to {@code system_server}.
  */
@@ -2572,6 +2575,11 @@ public final class SystemServer implements Dumpable {
             // LineageHardware
             t.traceBegin("StartLineageHardwareService");
             mSystemServiceManager.startService(LineageHardwareService.class);
+            t.traceEnd();
+
+            // LiveDisplay
+            t.traceBegin("StartLiveDisplayService");
+            mSystemServiceManager.startService(LiveDisplayService.class);
             t.traceEnd();
         }
 
