@@ -101,5 +101,6 @@ public class SystemSettings {
         Settings.System.SCREEN_FLASH_NOTIFICATION,
         Settings.System.SCREEN_FLASH_NOTIFICATION_COLOR,
         Settings.System.FULLSCREEN_GESTURES,
+        Settings.System.NAVIGATION_BAR_INVERSE,
     };
 }
