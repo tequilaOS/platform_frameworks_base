@@ -102,11 +102,16 @@ public class NavigationBarInflaterView extends FrameLayout
     private OverviewProxyService mOverviewProxyService;
     private int mNavBarMode = NAV_BAR_MODE_3BUTTON;
 
+    private boolean mNavBarLayoutInverse = false;
+
     public NavigationBarInflaterView(Context context, AttributeSet attrs) {
         super(context, attrs);
         createInflaters();
         mOverviewProxyService = Dependency.get(OverviewProxyService.class);
-        mNavBarMode = Dependency.get(NavigationModeController.class).addListener(this);
+        final NavigationModeController controller = Dependency.get(NavigationModeController.class);
+        mNavBarMode = controller.addListener(this);
+        mNavBarLayoutInverse = controller.shouldInvertNavBarLayout();
+        updateLayoutInversion();
     }
 
     @VisibleForTesting
@@ -152,9 +157,35 @@ public class NavigationBarInflaterView extends FrameLayout
     }
 
     @Override
+    public void onNavBarLayoutInverseChanged(boolean inverse) {
+        if (mNavBarLayoutInverse == inverse) return;
+        mNavBarLayoutInverse = inverse;
+        if (mNavBarMode != NAV_BAR_MODE_3BUTTON) return;
+        updateLayoutInversion();
+    }
+
+    private void updateLayoutInversion() {
+        if (mNavBarLayoutInverse) {
+            final int layoutDirection = mContext.getResources()
+                .getConfiguration().getLayoutDirection();
+            setLayoutDirection(layoutDirection == LAYOUT_DIRECTION_RTL
+                ? LAYOUT_DIRECTION_LTR
+                : LAYOUT_DIRECTION_RTL);
+        } else {
+            setLayoutDirection(LAYOUT_DIRECTION_INHERIT);
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         Dependency.get(NavigationModeController.class).removeListener(this);
         super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateLayoutInversion();
     }
 
     public void onLikelyDefaultLayoutChange() {
