@@ -221,6 +221,9 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
+    <!-- DataSwitch tile -->
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+
     <!-- Block notifications inline notifications -->
     <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
 
