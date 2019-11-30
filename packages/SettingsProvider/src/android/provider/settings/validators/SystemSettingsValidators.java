@@ -210,5 +210,6 @@ public class SystemSettingsValidators {
         VALIDATORS.put(System.FULLSCREEN_GESTURES, BOOLEAN_VALIDATOR);
         VALIDATORS.put(System.NAVIGATION_BAR_INVERSE, BOOLEAN_VALIDATOR);
         VALIDATORS.put(System.QS_SHOW_BATTERY_ESTIMATE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(System.STATUS_BAR_BATTERY_STYLE, new InclusiveIntegerRangeValidator(0, 2));
     }
 }
