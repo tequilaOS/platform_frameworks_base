@@ -92,5 +92,6 @@ public class SystemSettings {
         Settings.System.FULLSCREEN_GESTURES,
         Settings.System.NAVIGATION_BAR_INVERSE,
         Settings.System.QS_SHOW_BATTERY_ESTIMATE,
+        Settings.System.STATUS_BAR_BATTERY_STYLE,
     };
 }
