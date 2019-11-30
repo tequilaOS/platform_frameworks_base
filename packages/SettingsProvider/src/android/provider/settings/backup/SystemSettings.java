@@ -98,5 +98,7 @@ public class SystemSettings {
         Settings.System.ENABLE_RIPPLE_EFFECT,
         Settings.System.STATUS_BAR_CLOCK,
         Settings.System.STATUS_BAR_AM_PM,
+        Settings.System.STATUS_BAR_BATTERY_SHOW_PERCENT,
+        Settings.System.STATUS_BAR_BATTERY_STYLE,
     };
 }
