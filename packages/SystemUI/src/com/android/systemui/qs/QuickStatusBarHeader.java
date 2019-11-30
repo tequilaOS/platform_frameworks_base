@@ -23,10 +23,12 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.UserHandle;
 import android.net.Uri;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.AlarmClock;
+import android.provider.Settings;
 import android.provider.CalendarContract;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -337,7 +339,11 @@ public class QuickStatusBarHeader extends FrameLayout implements
 
         int textColor = Utils.getColorAttrDefaultColor(mContext, android.R.attr.textColorPrimary);
         if (textColor != mTextColorPrimary) {
+            boolean isCircleBattery = Settings.System.getIntForUser(
+                    mContext.getContentResolver(), Settings.System.STATUS_BAR_BATTERY_STYLE,
+                    0, UserHandle.USER_CURRENT) == 1;
             int textColorSecondary = Utils.getColorAttrDefaultColor(mContext,
+                    isCircleBattery ? android.R.attr.textColorHint :
                     android.R.attr.textColorSecondary);
             mTextColorPrimary = textColor;
             mClockView.setTextColor(textColor);
