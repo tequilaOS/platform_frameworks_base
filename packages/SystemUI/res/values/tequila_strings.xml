@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mono QS Tile -->
+    <string name="quick_settings_monotoggle_tile">Audio mode</string>
+    <string name="quick_settings_monotoggle_tile_mono">Mono audio</string>
+    <string name="quick_settings_monotoggle_tile_stereo">Stereo audio</string>
+</resources>
