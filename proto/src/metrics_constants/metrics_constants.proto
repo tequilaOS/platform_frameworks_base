@@ -7440,5 +7440,8 @@ message MetricsEvent {
     // END OF AOSP CONSTANTS
 
     TEQUILA = 2137;
+
+    // Panel for Mobile Data
+    PANEL_MOBILE_DATA = 4001;
   }
 }
