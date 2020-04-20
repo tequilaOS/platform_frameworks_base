@@ -121,6 +121,7 @@ android_library {
         "lottie",
         "VendorSupportLib",
         "faceunlock_framework",
+        "vendor.lineage.powershare-V1.0-java",
     ],
     manifest: "AndroidManifest.xml",
 
@@ -210,6 +211,11 @@ android_library {
         "dagger2",
         "jsr330",
         "WindowManager-Shell",
+<<<<<<< HEAD
+=======
+        "org.lineageos.platform.internal",
+        "vendor.lineage.powershare-V1.0-java",
+>>>>>>> 0769646dd75b (SystemUI: Add powershare QS tile)
     ],
     libs: [
         "android.test.runner",
