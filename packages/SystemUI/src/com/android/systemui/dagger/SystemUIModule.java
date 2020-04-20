@@ -137,6 +137,7 @@ import com.android.systemui.wallet.dagger.WalletModule;
 import com.android.systemui.wmshell.BubblesManager;
 import com.android.systemui.R;
 import com.android.wm.shell.bubbles.Bubbles;
+import com.android.systemui.qs.dagger.tequila.QSModuletequila;
 
 import com.google.android.systemui.smartspace.BcSmartspaceDataProvider;
 import com.google.android.systemui.smartspace.KeyguardMediaViewController;
@@ -219,7 +220,8 @@ import javax.inject.Named;
             UserModule.class,
             UtilModule.class,
             NoteTaskModule.class,
-            WalletModule.class
+            WalletModule.class,
+            QSModuletequila.class
         },
         subcomponents = {
             CentralSurfacesComponent.class,
