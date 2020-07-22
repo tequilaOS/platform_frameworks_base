@@ -87,7 +87,6 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
     private long totalRxBytes;
     private long totalTxBytes;
     private long lastUpdateTime;
-    private int txtSize;
     private int txtImgPadding;
     private int mTrafficType;
     private int mAutoHideThreshold;
@@ -294,9 +293,6 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
     public NetworkTrafficSB(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         final Resources resources = getResources();
-        txtSize = (mTrafficType == BOTH)
-                    ? resources.getDimensionPixelSize(R.dimen.net_traffic_multi_text_size)
-                    : mNetTrafSize;
         txtImgPadding = resources.getDimensionPixelSize(R.dimen.net_traffic_txt_img_padding);
         mTintColor = resources.getColor(android.R.color.white);
         Handler mHandler = new Handler();
@@ -394,7 +390,7 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
                 Settings.System.NETWORK_TRAFFIC_VIEW_LOCATION, 0,
                 UserHandle.USER_CURRENT) == 1;
         mNetTrafSize = Settings.System.getIntForUser(resolver,
-                Settings.System.NETWORK_TRAFFIC_FONT_SIZE, 21,
+                Settings.System.NETWORK_TRAFFIC_FONT_SIZE, 36,
                 UserHandle.USER_CURRENT);
     }
 
@@ -453,22 +449,15 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
     }
 
     private void updateTextSize() {
-        if (mTrafficType == BOTH) {
-            txtSize = getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size);
-        } else {
-            txtSize = mNetTrafSize;
-        }
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)txtSize);
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, mTrafficType == BOTH
+                ? (float)getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size)
+                : (float)mNetTrafSize);
     }
 
     public void onDensityOrFontScaleChanged() {
         final Resources resources = getResources();
-        txtSize = (mTrafficType == BOTH)
-		    ? resources.getDimensionPixelSize(R.dimen.net_traffic_multi_text_size)
-		    : mNetTrafSize;
         txtImgPadding = resources.getDimensionPixelSize(R.dimen.net_traffic_txt_img_padding);
         setCompoundDrawablePadding(txtImgPadding);
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)txtSize);
         setGravity(Gravity.RIGHT);
         updateTextSize();
     }
