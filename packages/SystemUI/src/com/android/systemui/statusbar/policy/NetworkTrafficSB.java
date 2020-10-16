@@ -90,7 +90,6 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
     private int txtImgPadding;
     private int mTrafficType;
     private int mAutoHideThreshold;
-    private int mNetTrafSize;
     private int mTintColor;
     private int mVisibleState = -1;
     private boolean mTrafficVisible = false;
@@ -263,9 +262,6 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
                     this, UserHandle.USER_ALL);
         }
 
-        /*
-         *  @hide
-         */
         @Override
         public void onChange(boolean selfChange) {
             setMode();
@@ -354,9 +350,6 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
 
     private void updateSettings() {
         final ContentResolver resolver = getContext().getContentResolver();
-        mTrafficInHeaderView = Settings.System.getIntForUser(resolver,
-                Settings.System.NETWORK_TRAFFIC_VIEW_LOCATION, 0,
-                UserHandle.USER_CURRENT) == 1;
         updateVisibility();
         updateTextSize();
         if (mIsEnabled) {
@@ -381,7 +374,7 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
                 Settings.System.NETWORK_TRAFFIC_TYPE, 0,
                 UserHandle.USER_CURRENT);
         mAutoHideThreshold = Settings.System.getIntForUser(resolver,
-                Settings.System.NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD, 0,
+                Settings.System.NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD, 1,
                 UserHandle.USER_CURRENT);
         mShowArrow = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_ARROW, 1,
@@ -389,9 +382,6 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
         mTrafficInHeaderView = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_VIEW_LOCATION, 0,
                 UserHandle.USER_CURRENT) == 1;
-        mNetTrafSize = Settings.System.getIntForUser(resolver,
-                Settings.System.NETWORK_TRAFFIC_FONT_SIZE, 36,
-                UserHandle.USER_CURRENT);
     }
 
     private void clearHandlerCallbacks() {
@@ -449,9 +439,15 @@ public class NetworkTrafficSB extends TextView implements StatusIconDisplayable 
     }
 
     private void updateTextSize() {
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, mTrafficType == BOTH
-                ? (float)getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size)
-                : (float)mNetTrafSize);
+        int size;
+        if (mTrafficType != BOTH) {
+            size = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.NETWORK_TRAFFIC_FONT_SIZE, 21,
+                    UserHandle.USER_CURRENT);
+        } else {
+            size = getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size);
+        }
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)size);
     }
 
     public void onDensityOrFontScaleChanged() {
