@@ -889,6 +889,11 @@ interface IActivityManager {
      */
     int getBackgroundRestrictionExemptionReason(int uid);
 
+    /**
+     *  Should disable touch if three fingers to screen shot is active?
+     */
+    boolean isSwipeToScreenshotGestureActive();
+
     // Start (?) of T transactions
     /**
      * Similar to {@link #startUserInBackgroundWithListener(int userId, IProgressListener unlockProgressListener)},
