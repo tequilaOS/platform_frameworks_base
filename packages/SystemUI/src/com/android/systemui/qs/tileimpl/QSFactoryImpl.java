@@ -53,17 +53,6 @@ public class QSFactoryImpl implements QSFactory {
     private static final String TAG = "QSFactory";
 
     protected final Map<String, Provider<QSTileImpl<?>>> mTileMap;
-    private final Lazy<QSHost> mQsHostLazy;
-    private final Provider<CustomTile.Builder> mCustomTileBuilderProvider;
-
-    @Inject
-    public QSFactoryImpl(
-            Lazy<QSHost> qsHostLazy,
-            Provider<CustomTile.Builder> customTileBuilderProvider,
-            Map<String, Provider<QSTileImpl<?>>> tileMap) {
-        mQsHostLazy = qsHostLazy;
-        mCustomTileBuilderProvider = customTileBuilderProvider;
-        mTileMap = tileMap;
     }
 
     /** Creates a tile with a type based on {@code tileSpec} */
