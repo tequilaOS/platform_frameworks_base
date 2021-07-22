@@ -23,7 +23,6 @@ import static com.android.systemui.statusbar.StatusBarIconView.STATE_ICON;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.View;
 
 import android.view.ViewGroup;
 import com.android.systemui.Dependency;
@@ -50,8 +49,8 @@ public class NetworkTrafficSB extends NetworkTraffic implements StatusIconDispla
     public NetworkTrafficSB(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
         ));
     }
 
@@ -81,7 +80,7 @@ public class NetworkTrafficSB extends NetworkTraffic implements StatusIconDispla
 
     @Override
     public boolean isIconVisible() {
-        return true;
+        return mIsEnabled && !mTrafficInHeaderView;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class NetworkTrafficSB extends NetworkTraffic implements StatusIconDispla
                 mSystemIconVisible = false;
                 break;
         }
-        updateVisibility();
+        updateSettings();
     }
 
     @Override
@@ -120,8 +119,7 @@ public class NetworkTrafficSB extends NetworkTraffic implements StatusIconDispla
     public void setDecorColor(int color) { }
 
     @Override
-    void updateVisibility() {
-        if (mIsEnabled && mTrafficVisible && mSystemIconVisible && !mTrafficInHeaderView) setVisibility(View.VISIBLE);
-        else setVisibility(View.GONE);
+    boolean isDisabled() {
+        return !mIsEnabled || mTrafficInHeaderView || !mSystemIconVisible;
     }
 }
