@@ -61,17 +61,19 @@ LOCAL_REQUIRED_MODULES := \
 	NavigationBarModeGesturalOverlayNarrowBack \
 	NavigationBarModeGesturalOverlayWideBack \
 	NavigationBarModeGesturalOverlayExtraWideBack \
-    IconShapeCylinderOverlay \
-    IconShapeHeartOverlay \
-    IconShapeHexagonOverlay \
-    IconShapeLeafOverlay \
-    IconShapePebbleOverlay \
-    IconShapeRoundedRectOverlay \
-    IconShapeSquareOverlay \
-    IconShapeSquircleOverlay \
-    IconShapeTaperedRectOverlay \
-    IconShapeTeardropOverlay \
-    IconShapeVesselOverlay \
+	IconPackOOSAndroidOverlay \
+	IconPackOOSSystemUIOverlay \
+	IconShapeCylinderOverlay \
+	IconShapeHeartOverlay \
+	IconShapeHexagonOverlay \
+	IconShapeLeafOverlay \
+	IconShapePebbleOverlay \
+	IconShapeRoundedRectOverlay \
+	IconShapeSquareOverlay \
+	IconShapeSquircleOverlay \
+	IconShapeTaperedRectOverlay \
+	IconShapeTeardropOverlay \
+	IconShapeVesselOverlay \
 	preinstalled-packages-platform-overlays.xml
 
 include $(BUILD_PHONY_PACKAGE)
