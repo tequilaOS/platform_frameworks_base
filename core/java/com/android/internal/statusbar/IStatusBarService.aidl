@@ -231,4 +231,9 @@ interface IStatusBarService
 
     /** Shows rear display educational dialog */
     void showRearDisplayDialog(int currentBaseState);
+
+    /**
+     * Toggles flashlight of the device
+     */
+    void toggleCameraFlash();
 }
