@@ -95,5 +95,6 @@ public class SystemSettings {
         Settings.System.NETWORK_TRAFFIC_VIEW_LOCATION,
         Settings.System.FULLSCREEN_GESTURES,
         Settings.System.NAVIGATION_BAR_INVERSE,
+        Settings.System.ENABLE_RIPPLE_EFFECT,
     };
 }
