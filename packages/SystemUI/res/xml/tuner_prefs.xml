@@ -18,7 +18,7 @@
     xmlns:sysui="http://schemas.android.com/apk/res-auto"
     android:title="@string/system_ui_tuner">
 
-    <PreferenceScreen
+    <PreferenceCategory
         android:key="status_bar"
         android:title="@string/status_bar" >
 
@@ -117,7 +117,7 @@
             android:title="@string/tuner_low_priority"
             sysui:defValue="false" />
 
-    </PreferenceScreen>
+    </PreferenceCategory>
 
     <PreferenceScreen
         android:key="volume_and_do_not_disturb"
