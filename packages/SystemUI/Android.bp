@@ -120,6 +120,7 @@ android_library {
         "jsr330",
         "lottie",
         "VendorSupportLib",
+        "faceunlock_framework",
     ],
     manifest: "AndroidManifest.xml",
 
