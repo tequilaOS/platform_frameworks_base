@@ -40,4 +40,7 @@
 
     <!-- Status bar tuner -->
     <string name="status_bar_call_strength">Call strength</string>
+
+    <!-- Face Unlock -->
+    <string name="face_unlock_recognizing">Recognizing face...</string>
 </resources>
