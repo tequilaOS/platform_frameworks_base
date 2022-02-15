@@ -76,7 +76,6 @@ public class NetworkTraffic extends TextView {
     private boolean iBytes;
     private boolean oBytes;
 
-    int mTintColor;
     boolean mIsEnabled;
     boolean mTrafficInHeaderView;
 
@@ -148,7 +147,6 @@ public class NetworkTraffic extends TextView {
                 if (!output.contentEquals(getText())) setText(output);
                 setVisibility(View.VISIBLE);
             }
-            updateTextSize();
             updateTrafficDrawable();
 
             // Post delayed message to refresh in ~1000ms
@@ -262,7 +260,6 @@ public class NetworkTraffic extends TextView {
     public NetworkTraffic(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
-        mTintColor = Color.WHITE;
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mIsConnected = mConnectivityManager.getActiveNetwork() != null;
         SettingsObserver settingsObserver = new SettingsObserver(getHandler());
@@ -354,7 +351,7 @@ public class NetworkTraffic extends TextView {
         }
         if (intTrafficDrawable != 0) {
             Drawable d = getContext().getDrawable(intTrafficDrawable);
-            if (d != null) d.setColorFilter(new PorterDuffColorFilter(mTintColor, Mode.MULTIPLY));
+            if (d != null) d.setColorFilter(new PorterDuffColorFilter(getCurrentTextColor(), Mode.MULTIPLY));
             setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.net_traffic_txt_img_padding));
             setCompoundDrawablesWithIntrinsicBounds(null, null, d, null);
             return;
@@ -376,11 +373,10 @@ public class NetworkTraffic extends TextView {
             setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)size);
             setMaxLines(2);
         }
-        setTextColor(mTintColor);
     }
 
     public void setTintColor(int color) {
-        mTintColor = color;
+        setTextColor(color);
         updateTrafficDrawable();
     }
 
