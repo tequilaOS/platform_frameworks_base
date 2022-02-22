@@ -435,6 +435,10 @@
                   android:process=":tuner"
                   android:exported="true">
             <intent-filter>
+                <action android:name="com.android.settings.action.UI_TUNER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="com.android.settings.action.DEMO_MODE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
