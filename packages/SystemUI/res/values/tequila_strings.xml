@@ -16,4 +16,10 @@
     <string name="accessibility_quick_settings_heads_up_on">Heads up on.</string>
     <string name="accessibility_quick_settings_heads_up_changed_off">Heads up turned off.</string>
     <string name="accessibility_quick_settings_heads_up_changed_on">Heads up turned on.</string>
+
+    <!-- QR QS Tile -->
+    <string name="quick_settings_qr_label">QR code</string>
+    <string name="quick_settings_qr_description">Tap to scan</string>
+    <string name="qr_code_activity_title">QR code scanner</string>
+    <string name="delete_text_history">Clear history</string>
 </resources>
