@@ -5253,7 +5253,13 @@ public final class Settings {
          */
         public static final String DATA_DISABLED_ICON = "data_disabled_icon";
 
-        /**
+	/**
+         * Whether to show data usage in qs footer
+         * @hide
+         */
+        public static final String QS_FOOTER_DATA_USAGE = "qs_footer_data_usage";
+
+       /**
          * These are all public system settings
          *
          * @hide
