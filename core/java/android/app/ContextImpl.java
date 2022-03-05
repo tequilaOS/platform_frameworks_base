@@ -2077,6 +2077,7 @@ class ContextImpl extends Context {
             switch (name) {
                 case Context.CONTEXTHUB_SERVICE:
                 case Context.WIFI_SCANNING_SERVICE:
+                case Context.APP_INTEGRITY_SERVICE:
                     // these privileged services are null-checked by GMS
                     return null;
             }
