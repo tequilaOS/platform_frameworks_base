@@ -4,4 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
+    <!-- Status bar tuner -->
+    <string name="status_bar_call_strength">Call strength</string>
 </resources>
