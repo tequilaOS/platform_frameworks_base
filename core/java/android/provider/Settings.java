@@ -12123,6 +12123,13 @@ public final class Settings {
         public static final String LOCK_SCREEN_WEATHER_ENABLED = "lockscreen_weather_enabled";
 
         /**
+         * Control whether FLAG_SECURE is ignored for all windows.
+         * @hide
+         */
+        @Readable
+        public static final String WINDOW_IGNORE_SECURE = "window_ignore_secure";
+
+        /**
          * Whether the feature that the device will fire a haptic when users scroll and hit
          * the edge of the screen is enabled.
          *
