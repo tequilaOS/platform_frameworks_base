@@ -100,6 +100,7 @@ public class MonoToggleTile extends QSTileImpl<BooleanState> {
 
     @Override
     protected void handleUpdateState(BooleanState state, Object arg) {
+	state.state = Tile.STATE_ACTIVE;
         if (isMonoEnabled()) {
             state.label = mContext.getString(R.string.quick_settings_monotoggle_tile_mono);
             state.icon = ResourceIcon.get(R.drawable.ic_mono_toggle_on);
