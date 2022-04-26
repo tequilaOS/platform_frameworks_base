@@ -202,7 +202,7 @@ public class QSIconViewImpl extends QSIconView {
                 int alpha = (int) (fromAlpha + (toAlpha - fromAlpha) * fraction);
                 int channel = (int) (fromChannel + (toChannel - fromChannel) * fraction);
 
-                setTint(iv, Color.argb(alpha, channel, channel, channel));
+                setTint(iv, toColor);
             });
             anim.addListener(new AnimatorListenerAdapter() {
                 @Override
@@ -253,7 +253,7 @@ public class QSIconViewImpl extends QSIconView {
                 return Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary);
             case Tile.STATE_ACTIVE:
                 return Utils.getColorAttrDefaultColor(context,
-                        android.R.attr.textColorPrimaryInverse);
+                        com.android.internal.R.attr.colorAccent);
             default:
                 Log.e("QSIconView", "Invalid state " + state);
                 return 0;
