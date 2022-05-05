@@ -7052,7 +7052,7 @@ final class ActivityRecord extends WindowToken implements WindowManagerService.A
     }
     private boolean shouldUseSolidColorSplashScreen(ActivityRecord sourceRecord,
             boolean startActivity, ActivityOptions options, int resolvedTheme) {
-        if (sourceRecord == null && !startActivity) {
+        if (sourceRecord == null && !startActivity && task != null) {
             // Use simple style if this activity is not top activity. This could happen when adding
             // a splash screen window to the warm start activity which is re-create because top is
             // finishing.
