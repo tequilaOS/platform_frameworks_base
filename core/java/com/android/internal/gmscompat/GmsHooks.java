@@ -38,6 +38,7 @@ import android.os.PowerExemptionManager;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.Downloads;
 import android.provider.Settings;
@@ -237,6 +238,9 @@ public final class GmsHooks {
                 || "icc".equals(authority))
         {
             if (!GmsCompat.hasPermission(Manifest.permission.READ_CONTACTS)) {
+                if (projection == null) {
+                    projection = new String[] { BaseColumns._ID };
+                }
                 return new MatrixCursor(projection);
             }
         }
