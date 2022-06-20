@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
     <!-- Mono QS Tile -->
     <string name="quick_settings_monotoggle_tile">Audio mode</string>
     <string name="quick_settings_monotoggle_tile_mono">Mono audio</string>
@@ -22,25 +22,4 @@
     <string name="quick_settings_qr_description">Tap to scan</string>
     <string name="qr_code_activity_title">QR code scanner</string>
     <string name="delete_text_history">Clear history</string>
-
-    <!-- USB tethering QS tile -->
-    <string name="quick_settings_usb_tether_label">USB tethering</string>
-
-    <!-- AOD QS tile -->
-    <string name="quick_settings_aod_label">AOD</string>
-    <string name="quick_settings_aod_off_powersave_label">AOD off\nBattery saver</string>
-
-    <!-- Sync QS tile -->
-    <string name="quick_settings_sync_label">Sync</string>
-    <string name="accessibility_quick_settings_sync_off">Sync off.</string>
-    <string name="accessibility_quick_settings_sync_on">Sync on.</string>
-    <string name="accessibility_quick_settings_sync_changed_off">Sync turned off.</string>
-    <string name="accessibility_quick_settings_sync_changed_on">Sync turned on.</string>
-
-    <!-- Ambient display QS tile -->
-    <string name="quick_settings_ambient_display_label">Ambient display</string>
-    <string name="accessibility_quick_settings_ambient_display_off">Ambient display off.</string>
-    <string name="accessibility_quick_settings_ambient_display_on">Ambient display on.</string>
-    <string name="accessibility_quick_settings_ambient_display_changed_off">Ambient display turned off.</string>
-    <string name="accessibility_quick_settings_ambient_display_changed_on">Ambient display turned on.</string>
 </resources>
