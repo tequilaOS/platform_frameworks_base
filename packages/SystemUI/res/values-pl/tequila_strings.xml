@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Mono QS Tile -->
+    <string name="quick_settings_monotoggle_tile">Tryb audio</string>
+    <string name="quick_settings_monotoggle_tile_mono">Dźwięk mono</string>
+    <string name="quick_settings_monotoggle_tile_stereo">Dźwięk stereo</string>
     <!-- Caffeine QS tile -->
+    <string name="quick_settings_caffeine_label">Kofeina</string>
+    <string name="accessibility_quick_settings_caffeine_off">Kofeina wyłączona.</string>
+    <string name="accessibility_quick_settings_caffeine_on">Kofeina włączona.</string>
     <!-- Heads up QS tile -->
+    <string name="quick_settings_heads_up_label">Wyskakujące powiadomienia</string>
+    <string name="accessibility_quick_settings_heads_up_off">Wyskakujące powiadomienia wyłączone.</string>
+    <string name="accessibility_quick_settings_heads_up_on">Wyskakujące powiadomienia włączone.</string>
+    <string name="accessibility_quick_settings_heads_up_changed_off">Wyskakujące powiadomienia zostały wyłączone.</string>
+    <string name="accessibility_quick_settings_heads_up_changed_on">Wyskakujące powiadomienia zostały włączone.</string>
     <!-- QR QS Tile -->
+    <string name="quick_settings_qr_label">Kod QR</string>
+    <string name="quick_settings_qr_description">Dotknij, aby zeskanować</string>
+    <string name="qr_code_activity_title">Skaner kodów QR</string>
+    <string name="delete_text_history">Wyczyść historię</string>
+    <!-- USB tethering QS tile -->
+    <!-- AOD QS tile -->
+    <!-- Sync QS tile -->
+    <!-- Ambient display QS tile -->
+    <!-- Face Unlock -->
 </resources>
