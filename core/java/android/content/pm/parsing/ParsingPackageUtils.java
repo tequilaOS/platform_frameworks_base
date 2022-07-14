@@ -106,6 +106,7 @@ import android.util.TypedValue;
 import android.util.apk.ApkSignatureVerifier;
 
 import com.android.internal.R;
+import com.android.internal.gmscompat.client.GmsClientHooks;
 import com.android.internal.os.ClassLoaderFactory;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.XmlUtils;
@@ -2139,6 +2140,8 @@ public class ParsingPackageUtils {
             pkg.addActivity(a.getResult());
         }
 
+        GmsClientHooks.maybeAddServiceDuringParsing(pkg);
+
         if (hasActivityOrder) {
             pkg.sortActivities();
         }
@@ -2798,6 +2801,9 @@ public class ParsingPackageUtils {
                     = PackageParser.NEW_PERMISSIONS[ip];
             if (pkg.getTargetSdkVersion() >= npi.sdkVersion) {
                 break;
+            }
+            if (npi.targetPackage != null && !pkg.getPackageName().equals(npi.targetPackage)) {
+                continue;
             }
             if (!pkg.getRequestedPermissions().contains(npi.name)) {
                 if (newPermsMsg == null) {

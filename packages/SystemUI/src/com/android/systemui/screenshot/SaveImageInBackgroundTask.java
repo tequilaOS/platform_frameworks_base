@@ -66,7 +66,7 @@ import java.util.function.Supplier;
 /**
  * An AsyncTask that saves an image to the media store in the background.
  */
-class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
+class SaveImageInBackgroundTask extends AsyncTask<String, Void, Void> {
     private static final String TAG = logTag(SaveImageInBackgroundTask.class);
 
     private static final String SCREENSHOT_ID_TEMPLATE = "Screenshot_%s";
@@ -115,7 +115,7 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... paramsUnused) {
+    protected Void doInBackground(String... params) {
         if (isCancelled()) {
             if (DEBUG_STORAGE) {
                 Log.d(TAG, "cancelled! returning null");
@@ -140,7 +140,8 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
 
             // Call synchronously here since already on a background thread.
             ListenableFuture<ImageExporter.Result> future =
-                    mImageExporter.export(Runnable::run, requestId, image);
+                    mImageExporter.export(Runnable::run, requestId, image,
+                            params != null ? params[0] : null);
             ImageExporter.Result result = future.get();
             final Uri uri = result.uri;
             mImageTime = result.timestamp;
@@ -237,7 +238,7 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
             String subjectDate = DateFormat.getDateTimeInstance().format(new Date(mImageTime));
             String subject = String.format(SCREENSHOT_SHARE_SUBJECT_TEMPLATE, subjectDate);
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            sharingIntent.setType("image/png");
+            sharingIntent.setDataAndType(uri, "image/png");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             // Include URI in ClipData also, so that grantPermission picks it up.
             // We don't use setData here because some apps interpret this as "to:".

@@ -19,6 +19,7 @@ package android.app;
 import android.annotation.IntDef;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
+import android.app.compat.gms.GmsCompat;
 import android.compat.annotation.UnsupportedAppUsage;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -56,6 +57,8 @@ import android.view.Window;
 import android.view.WindowManagerGlobal;
 
 import com.android.internal.content.ReferrerIntent;
+
+import com.android.internal.util.custom.PixelPropsUtils;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -1187,11 +1190,13 @@ public class Instrumentation {
     public Application newApplication(ClassLoader cl, String className, Context context)
             throws InstantiationException, IllegalAccessException, 
             ClassNotFoundException {
+        GmsCompat.maybeEnable(context);
         Application app = getFactory(context.getPackageName())
                 .instantiateApplication(cl, className);
         app.attach(context);
         String packageName = app.getPackageName();
         PixelPropsUtils.setProps(packageName);
+        PixelPropsUtils.setProps(app.getPackageName());
         return app;
     }
     
@@ -1207,10 +1212,12 @@ public class Instrumentation {
     static public Application newApplication(Class<?> clazz, Context context)
             throws InstantiationException, IllegalAccessException, 
             ClassNotFoundException {
+        GmsCompat.maybeEnable(context);
         Application app = (Application)clazz.newInstance();
         app.attach(context);
         String packageName = app.getPackageName();
         PixelPropsUtils.setProps(packageName);
+        PixelPropsUtils.setProps(app.getPackageName());
         return app;
     }
 

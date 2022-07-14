@@ -55,30 +55,30 @@ public final class Zygote {
     */
 
     /** enable debugging over JDWP */
-    public static final int DEBUG_ENABLE_JDWP   = 0;
+    public static final int DEBUG_ENABLE_JDWP   = 1;
     /** enable JNI checks */
-    public static final int DEBUG_ENABLE_CHECKJNI   = 0;
+    public static final int DEBUG_ENABLE_CHECKJNI   = 1 << 1;
     /** enable Java programming language "assert" statements */
-    public static final int DEBUG_ENABLE_ASSERT     = 0;
+    public static final int DEBUG_ENABLE_ASSERT     = 1 << 2;
     /** disable the AOT compiler and JIT */
-    public static final int DEBUG_ENABLE_SAFEMODE   = 0;
+    public static final int DEBUG_ENABLE_SAFEMODE   = 1 << 3;
     /** Enable logging of third-party JNI activity. */
-    public static final int DEBUG_ENABLE_JNI_LOGGING = 0;
+    public static final int DEBUG_ENABLE_JNI_LOGGING = 1 << 4;
     /** Force generation of native debugging information. */
-    public static final int DEBUG_GENERATE_DEBUG_INFO = 0;
+    public static final int DEBUG_GENERATE_DEBUG_INFO = 1 << 5;
     /** Always use JIT-ed code. */
-    public static final int DEBUG_ALWAYS_JIT = 0;
+    public static final int DEBUG_ALWAYS_JIT = 1 << 6;
     /** Make the code native debuggable by turning off some optimizations. */
-    public static final int DEBUG_NATIVE_DEBUGGABLE = 0;
+    public static final int DEBUG_NATIVE_DEBUGGABLE = 1 << 7;
     /** Make the code Java debuggable by turning off some optimizations. */
-    public static final int DEBUG_JAVA_DEBUGGABLE = 0;
+    public static final int DEBUG_JAVA_DEBUGGABLE = 1 << 8;
 
     /** Turn off the verifier. */
     public static final int DISABLE_VERIFIER = 1 << 9;
     /** Only use oat files located in /system. Otherwise use dex/jar/apk . */
     public static final int ONLY_USE_SYSTEM_OAT_FILES = 1 << 10;
     /** Force generation of native debugging information for backtraces. */
-    public static final int DEBUG_GENERATE_MINI_DEBUG_INFO = 0;
+    public static final int DEBUG_GENERATE_MINI_DEBUG_INFO = 1 << 11;
     /**
      * Hidden API access restrictions. This is a mask for bits representing the API enforcement
      * policy, defined by {@code @ApplicationInfo.HiddenApiEnforcementPolicy}.
@@ -724,9 +724,6 @@ public final class Zygote {
         DataOutputStream usapOutputStream = null;
         ZygoteArguments args = null;
 
-        // Block SIGTERM so we won't be killed if the Zygote flushes the USAP pool.
-        blockSigTerm();
-
         LocalSocket sessionSocket = null;
         if (argBuffer == null) {
             // Read arguments from usapPoolSocket instead.
@@ -742,12 +739,16 @@ public final class Zygote {
                 ZygoteCommandBuffer tmpArgBuffer = null;
                 try {
                     sessionSocket = usapPoolSocket.accept();
+                    // Block SIGTERM so we won't be killed if the Zygote flushes the USAP pool.
+                    // This is safe from a race condition because the pool is only flushed after
+                    // the SystemServer changes its internal state to stop using the USAP pool.
+                    blockSigTerm();
 
                     usapOutputStream =
                             new DataOutputStream(sessionSocket.getOutputStream());
                     Credentials peerCredentials = sessionSocket.getPeerCredentials();
                     tmpArgBuffer = new ZygoteCommandBuffer(sessionSocket);
-                    args = ZygoteArguments.getInstance(argBuffer);
+                    args = ZygoteArguments.getInstance(tmpArgBuffer);
                     applyUidSecurityPolicy(args, peerCredentials);
                     // TODO (chriswailes): Should this only be run for debug builds?
                     validateUsapCommand(args);
@@ -759,9 +760,10 @@ public final class Zygote {
                 unblockSigTerm();
                 IoUtils.closeQuietly(sessionSocket);
                 IoUtils.closeQuietly(tmpArgBuffer);
-                blockSigTerm();
             }
         } else {
+            // Block SIGTERM so we won't be killed if the Zygote flushes the USAP pool.
+            blockSigTerm();
             try {
                 args = ZygoteArguments.getInstance(argBuffer);
             } catch (Exception ex) {

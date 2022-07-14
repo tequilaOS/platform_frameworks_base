@@ -37,6 +37,7 @@ import android.annotation.MainThread;
 import android.annotation.Nullable;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.ActivityTaskManager;
 import android.app.ExitTransitionCoordinator;
 import android.app.ExitTransitionCoordinator.ExitTransitionCallbacks;
 import android.app.Notification;
@@ -44,11 +45,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Insets;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
+import android.hardware.camera2.CameraManager;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
 import android.net.Uri;
@@ -58,6 +61,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.SystemProperties;
+import android.os.UserHandle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -93,6 +98,8 @@ import com.android.systemui.R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.screenshot.ScreenshotController.SavedImageData.ActionTransition;
 import com.android.systemui.screenshot.TakeScreenshotService.RequestCallback;
+import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.TaskStackChangeListener;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -256,6 +263,8 @@ public class ScreenshotController {
     private final MediaActionSound mCameraSound;
     private final AudioManager mAudioManager;
     private final Vibrator mVibrator;
+    private final CameraManager mCameraManager;
+    private int mCamsInUse = 0;
     private final ScrollCaptureClient mScrollCaptureClient;
     private final PhoneWindow mWindow;
     private final DisplayManager mDisplayManager;
@@ -299,6 +308,33 @@ public class ScreenshotController {
                     | ActivityInfo.CONFIG_UI_MODE
                     | ActivityInfo.CONFIG_SCREEN_LAYOUT
                     | ActivityInfo.CONFIG_ASSETS_PATHS);
+
+    private ComponentName mTaskComponentName;
+    private PackageManager mPm;
+
+    private final TaskStackChangeListener mTaskListener = new TaskStackChangeListener() {
+        @Override
+        public void onTaskStackChanged() {
+            mBgExecutor.execute(() -> {
+                try {
+                    final ActivityTaskManager.RootTaskInfo focusedStack =
+                            ActivityTaskManager.getService().getFocusedRootTaskInfo();
+                    if (focusedStack != null && focusedStack.topActivity != null) {
+                        mTaskComponentName = focusedStack.topActivity;
+                    }
+                } catch (Exception e) {}
+            });
+        }
+    };
+
+    private String getForegroundAppLabel() {
+        try {
+            final ActivityInfo ai = mPm.getActivityInfo(mTaskComponentName, 0);
+            return ai.applicationInfo.loadLabel(mPm).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+             return null;
+        }
+    }
 
     @Inject
     ScreenshotController(
@@ -363,6 +399,18 @@ public class ScreenshotController {
         // Grab system services needed for screenshot sound
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+        mCameraManager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
+        mCameraManager.registerAvailabilityCallback(mCamCallback,
+                new Handler(Looper.getMainLooper()));
+
+        // Grab PackageManager
+        mPm = mContext.getPackageManager();
+
+        // Register task stack listener
+        ActivityManagerWrapper.getInstance().registerTaskStackListener(mTaskListener);
+
+        // Initialize current foreground package name
+        mTaskListener.onTaskStackChanged();
     }
 
     void takeScreenshotFullscreen(ComponentName topComponent, Consumer<Uri> finisher,
@@ -716,6 +764,7 @@ public class ScreenshotController {
                                         mScreenshotView.startLongScreenshotTransition(
                                                 transitionDestination, onTransitionEnd,
                                                 longScreenshot));
+                        mLongScreenshotHolder.setForegroundAppName(getForegroundAppLabel());
 
                         final Intent intent = new Intent(mContext, LongScreenshotActivity.class);
                         intent.setFlags(
@@ -801,21 +850,7 @@ public class ScreenshotController {
      */
     private void saveScreenshotAndToast(Consumer<Uri> finisher) {
         // Play the shutter sound to notify that we've taken a screenshot
-        switch (mAudioManager.getRingerMode()) {
-            case AudioManager.RINGER_MODE_SILENT:
-                 // do nothing
-                 break;
-            case AudioManager.RINGER_MODE_VIBRATE:
-                 if (mVibrator != null && mVibrator.hasVibrator()) {
-                     mVibrator.vibrate(VibrationEffect.createOneShot(50,
-                            VibrationEffect.DEFAULT_AMPLITUDE));
-                 }
-                 break;
-            case AudioManager.RINGER_MODE_NORMAL:
-                 // Play the shutter sound to notify that we've taken a screenshot
-                 mCameraSound.play(MediaActionSound.SHUTTER_CLICK);
-                 break;
-        }
+        playShutterSound();
 
         saveScreenshotInWorkerThread(
                 /* onComplete */ finisher,
@@ -849,21 +884,7 @@ public class ScreenshotController {
                 mScreenshotView.createScreenshotDropInAnimation(screenRect, showFlash);
 
         // Play the shutter sound to notify that we've taken a screenshot
-        switch (mAudioManager.getRingerMode()) {
-            case AudioManager.RINGER_MODE_SILENT:
-                 // do nothing
-                 break;
-            case AudioManager.RINGER_MODE_VIBRATE:
-                 if (mVibrator != null && mVibrator.hasVibrator()) {
-                     mVibrator.vibrate(VibrationEffect.createOneShot(50,
-                            VibrationEffect.DEFAULT_AMPLITUDE));
-                 }
-                 break;
-            case AudioManager.RINGER_MODE_NORMAL:
-                 // Play the shutter sound to notify that we've taken a screenshot
-                 mCameraSound.play(MediaActionSound.SHUTTER_CLICK);
-                 break;
-        }
+        playShutterSound();
 
         if (DEBUG_ANIM) {
             Log.d(TAG, "starting post-screenshot animation");
@@ -906,7 +927,7 @@ public class ScreenshotController {
 
         mSaveInBgTask = new SaveImageInBackgroundTask(mContext, mImageExporter,
                 mScreenshotSmartActions, data, getActionTransitionSupplier());
-        mSaveInBgTask.execute();
+        mSaveInBgTask.execute(getForegroundAppLabel());
     }
 
     private void cancelTimeout() {
@@ -1109,6 +1130,51 @@ public class ScreenshotController {
                 public void onFinish() {
                 }
             };
+         }
+    }
+
+
+    private void playShutterSound() {
+       boolean playSound = readCameraSoundForced() && mCamsInUse > 0;
+        switch (mAudioManager.getRingerMode()) {
+            case AudioManager.RINGER_MODE_SILENT:
+                // do nothing
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                if (mVibrator != null && mVibrator.hasVibrator()) {
+                    mVibrator.vibrate(VibrationEffect.createOneShot(50,
+                            VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+                break;
+            case AudioManager.RINGER_MODE_NORMAL:
+                // in this case we want to play sound even if not forced on
+                playSound = true;
+                break;
         }
+        // We want to play the shutter sound when it's either forced or
+        // when we use normal ringer mode
+        if (playSound && Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.SCREENSHOT_SHUTTER_SOUND, 1, UserHandle.USER_CURRENT) == 1) {
+            mCameraSound.play(MediaActionSound.SHUTTER_CLICK);
+        }
+    }
+
+    private CameraManager.AvailabilityCallback mCamCallback =
+            new CameraManager.AvailabilityCallback() {
+        @Override
+        public void onCameraOpened(String cameraId, String packageId) {
+            mCamsInUse++;
+        }
+
+        @Override
+        public void onCameraClosed(String cameraId) {
+            mCamsInUse--;
+        }
+    };
+
+    private boolean readCameraSoundForced() {
+        return SystemProperties.getBoolean("audio.camerasound.force", false) ||
+                mContext.getResources().getBoolean(
+                        com.android.internal.R.bool.config_camera_sound_forced);
     }
 }

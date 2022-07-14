@@ -26,6 +26,7 @@ import android.annotation.SdkConstant.SdkConstantType;
 import android.annotation.SystemApi;
 import android.annotation.SystemService;
 import android.annotation.TestApi;
+import android.app.compat.gms.GmsCompat;
 import android.compat.annotation.ChangeId;
 import android.compat.annotation.EnabledSince;
 import android.compat.annotation.UnsupportedAppUsage;
@@ -43,6 +44,7 @@ import android.util.Log;
 import android.util.proto.ProtoOutputStream;
 
 import com.android.i18n.timezone.ZoneInfoDb;
+import com.android.internal.gmscompat.GmsHooks;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -912,11 +914,12 @@ public class AlarmManager {
             long intervalMillis, int flags, PendingIntent operation, final OnAlarmListener listener,
             String listenerTag, Executor targetExecutor, WorkSource workSource,
             AlarmClockInfo alarmClock) {
-
-        if (mPackageName.equals("com.google.android.gms")) {
+        if (GmsCompat.isEnabled()) {
             if (windowMillis == WINDOW_EXACT && !canScheduleExactAlarms()) {
                 windowMillis = WINDOW_HEURISTIC;
             }
+            // non-null WorkSource requires privileged UPDATE_DEVICE_STATS permission
+            workSource = null;
         }
 
         if (triggerAtMillis < 0) {

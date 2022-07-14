@@ -16025,7 +16025,7 @@ public class PackageManagerService extends IPackageManager.Stub
             final BroadcastOptions bOptions = getTemporaryAppAllowlistBroadcastOptions(
                     REASON_LOCKED_BOOT_COMPLETED);
             am.broadcastIntentWithFeature(null, null, lockedBcIntent, null, null, 0, null, null,
-                    requiredPermissions, null, android.app.AppOpsManager.OP_NONE,
+                    requiredPermissions, null, null, android.app.AppOpsManager.OP_NONE,
                     bOptions.toBundle(), false, false, userId);
 
             // Deliver BOOT_COMPLETED only if user is unlocked
@@ -16036,7 +16036,7 @@ public class PackageManagerService extends IPackageManager.Stub
                     bcIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 }
                 am.broadcastIntentWithFeature(null, null, bcIntent, null, null, 0, null, null,
-                        requiredPermissions, null, android.app.AppOpsManager.OP_NONE,
+                        requiredPermissions, null, null, android.app.AppOpsManager.OP_NONE,
                         bOptions.toBundle(), false, false, userId);
             }
         } catch (RemoteException e) {
@@ -21481,6 +21481,9 @@ public class PackageManagerService extends IPackageManager.Stub
                     + (versionCode == PackageManager.VERSION_CODE_HIGHEST
                     ? "VERSION_CODE_HIGHEST" : versionCode));
         }
+
+        EuiccCompatHooks.onDeletePackage(this, internalPackageName, deleteAllUsers, userId);
+
         // Queue up an async operation since the package deletion may take a little while.
         mHandler.post(() -> {
             int returnCode;
@@ -22972,7 +22975,7 @@ public class PackageManagerService extends IPackageManager.Stub
             intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT);
             try {
                 am.broadcastIntentWithFeature(null, null, intent, null, null,
-                        0, null, null, null, null, android.app.AppOpsManager.OP_NONE,
+                        0, null, null, null, null, null, android.app.AppOpsManager.OP_NONE,
                         null, false, false, userId);
             } catch (RemoteException e) {
             }
@@ -24158,6 +24161,9 @@ public class PackageManagerService extends IPackageManager.Stub
                     return;
                 }
             }
+
+            EuiccCompatHooks.onSetEnabledSetting(this, packageName, newState, userId);
+
             // If we're enabling a system stub, there's a little more work to do.
             // Prior to enabling the package, we need to decompress the APK(s) to the
             // data partition and then replace the version on the system partition.
@@ -24766,6 +24772,8 @@ public class PackageManagerService extends IPackageManager.Stub
                         mPerUidReadTimeoutsCache = null;
                     }
                 });
+
+        EuiccCompatHooks.onServiceInitCompleted(this);
     }
 
     public void waitForAppDataPrepared() {
@@ -28847,8 +28855,8 @@ public class PackageManagerService extends IPackageManager.Stub
             };
             try {
                 am.broadcastIntentWithFeature(null, null, intent, null, null, 0, null, null,
-                        requiredPermissions, null, android.app.AppOpsManager.OP_NONE, null, false,
-                        false, UserHandle.USER_ALL);
+                        requiredPermissions, null, null, android.app.AppOpsManager.OP_NONE, null,
+                        false, false, UserHandle.USER_ALL);
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }

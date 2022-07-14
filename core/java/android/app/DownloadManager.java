@@ -16,6 +16,7 @@
 
 package android.app;
 
+import android.Manifest;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.annotation.RequiresPermission;
@@ -24,6 +25,7 @@ import android.annotation.SdkConstant.SdkConstantType;
 import android.annotation.SystemApi;
 import android.annotation.SystemService;
 import android.annotation.TestApi;
+import android.app.compat.gms.GmsCompat;
 import android.compat.annotation.UnsupportedAppUsage;
 import android.content.ClipDescription;
 import android.content.ContentProviderClient;
@@ -31,9 +33,11 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
+import android.database.MatrixCursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
@@ -300,6 +304,13 @@ public class DownloadManager {
      * Value of {@link #COLUMN_REASON} when the download is paused for some other reason.
      */
     public final static int PAUSED_UNKNOWN = 4;
+
+    /**
+     * Value of {@link #COLUMN_REASON} when the download is paused manually.
+     *
+     * @hide
+     */
+    public final static int PAUSED_MANUAL = 5;
 
     /**
      * Broadcast intent action sent by the download manager when a download completes.
@@ -705,6 +716,13 @@ public class DownloadManager {
          * @return this object
          */
         public Request setNotificationVisibility(int visibility) {
+            if (GmsCompat.isEnabled()) {
+                // requires the privileged DOWNLOAD_WITHOUT_NOTIFICATION permission
+                if (visibility == VISIBILITY_HIDDEN) {
+                    return this;
+                }
+            }
+
             mNotificationVisibility = visibility;
             return this;
         }
@@ -994,6 +1012,7 @@ public class DownloadManager {
                     parts.add(statusClause("=", Downloads.Impl.STATUS_WAITING_TO_RETRY));
                     parts.add(statusClause("=", Downloads.Impl.STATUS_WAITING_FOR_NETWORK));
                     parts.add(statusClause("=", Downloads.Impl.STATUS_QUEUED_FOR_WIFI));
+                    parts.add(statusClause("=", Downloads.Impl.STATUS_PAUSED_MANUAL));
                 }
                 if ((mStatusFlags & STATUS_SUCCESSFUL) != 0) {
                     parts.add(statusClause("=", Downloads.Impl.STATUS_SUCCESS));
@@ -1115,6 +1134,12 @@ public class DownloadManager {
      * calls related to this download.
      */
     public long enqueue(Request request) {
+        // don't crash apps that expect INTERNET permission to be always granted
+        Context ctx = ActivityThread.currentApplication();
+        if (ctx != null && ctx.checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            // invalid id (DownloadProvider uses SQLite and returns a row id)
+            return -1;
+        }
         ContentValues values = request.toContentValues(mPackageName);
         Uri downloadUri = mResolver.insert(Downloads.Impl.CONTENT_URI, values);
         long id = Long.parseLong(downloadUri.getLastPathSegment());
@@ -1162,6 +1187,12 @@ public class DownloadManager {
 
     /** @hide */
     public Cursor query(Query query, String[] projection) {
+        // don't crash apps that expect INTERNET permission to be always granted
+        Context ctx = ActivityThread.currentApplication();
+        if (ctx != null && ctx.checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            // underlying provider is protected by the INTERNET permission
+            return new MatrixCursor(projection);
+        }
         Cursor underlyingCursor = query.runQuery(mResolver, projection, mBaseUri);
         if (underlyingCursor == null) {
             return null;
@@ -1281,6 +1312,34 @@ public class DownloadManager {
         values.put(Downloads.Impl.COLUMN_CONTROL, Downloads.Impl.CONTROL_RUN);
         values.put(Downloads.Impl.COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT, 1);
         mResolver.update(mBaseUri, values, getWhereClauseForIds(ids), getWhereArgsForIds(ids));
+    }
+
+    /**
+     * Pause the given running download manually.
+     *
+     * @param id the ID of the download to be paused
+     * @return the number of downloads actually updated
+     * @hide
+     */
+    public int pauseDownload(long id) {
+        ContentValues values = new ContentValues();
+        values.put(Downloads.Impl.COLUMN_STATUS, Downloads.Impl.STATUS_PAUSED_MANUAL);
+
+        return mResolver.update(ContentUris.withAppendedId(mBaseUri, id), values, null, null);
+    }
+
+    /**
+     * Resume the given paused download manually.
+     *
+     * @param id the ID of the download to be resumed
+     * @return the number of downloads actually updated
+     * @hide
+     */
+    public int resumeDownload(long id) {
+        ContentValues values = new ContentValues();
+        values.put(Downloads.Impl.COLUMN_STATUS, Downloads.Impl.STATUS_RUNNING);
+
+        return mResolver.update(ContentUris.withAppendedId(mBaseUri, id), values, null, null);
     }
 
     /**
@@ -1773,6 +1832,9 @@ public class DownloadManager {
                 case Downloads.Impl.STATUS_QUEUED_FOR_WIFI:
                     return PAUSED_QUEUED_FOR_WIFI;
 
+                case Downloads.Impl.STATUS_PAUSED_MANUAL:
+                    return PAUSED_MANUAL;
+
                 default:
                     return PAUSED_UNKNOWN;
             }
@@ -1828,6 +1890,7 @@ public class DownloadManager {
                 case Downloads.Impl.STATUS_WAITING_TO_RETRY:
                 case Downloads.Impl.STATUS_WAITING_FOR_NETWORK:
                 case Downloads.Impl.STATUS_QUEUED_FOR_WIFI:
+                case Downloads.Impl.STATUS_PAUSED_MANUAL:
                     return STATUS_PAUSED;
 
                 case Downloads.Impl.STATUS_SUCCESS:

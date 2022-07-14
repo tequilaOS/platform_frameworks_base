@@ -59,6 +59,7 @@ import android.util.SparseArray;
 import android.view.DisplayAdjustments;
 
 import com.android.internal.annotations.GuardedBy;
+import com.android.internal.gmscompat.GmsHooks;
 import com.android.internal.util.ArrayUtils;
 
 import dalvik.system.BaseDexClassLoader;
@@ -1330,7 +1331,7 @@ public final class LoadedApk {
 
         try {
             final java.lang.ClassLoader cl = getClassLoader();
-            if (!mPackageName.equals("android")) {
+            if (!ActivityThread.isSystem()) {
                 Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER,
                         "initializeJavaContextClassLoader");
                 initializeJavaContextClassLoader();
