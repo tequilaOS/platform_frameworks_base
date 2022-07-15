@@ -2,4 +2,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Cycle through ringer modes -->
     <!-- Face unlock -->
+    <string name="face_unlock_disabled_idle">Rozpoznawanie twarzy wyłączone z powodu braku aktywności</string>
 </resources>

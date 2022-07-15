@@ -20,8 +20,20 @@
     <string name="qr_code_activity_title">Skaner kodów QR</string>
     <string name="delete_text_history">Wyczyść historię</string>
     <!-- USB tethering QS tile -->
+    <string name="quick_settings_usb_tether_label">Tethering przez USB</string>
     <!-- AOD QS tile -->
     <!-- Sync QS tile -->
+    <string name="quick_settings_sync_label">Synchronizacja</string>
+    <string name="accessibility_quick_settings_sync_off">Synchronizacja wył.</string>
+    <string name="accessibility_quick_settings_sync_on">Synchronizacja wł.</string>
+    <string name="accessibility_quick_settings_sync_changed_off">Synchronizacja została wyłączona.</string>
+    <string name="accessibility_quick_settings_sync_changed_on">Synchronizacja została włączona.</string>
     <!-- Ambient display QS tile -->
+    <string name="quick_settings_ambient_display_label">Ekran dostosowany do otoczenia</string>
+    <string name="accessibility_quick_settings_ambient_display_off">Ekran dostosowany do otoczenia wyłączony.</string>
+    <string name="accessibility_quick_settings_ambient_display_on">Ekran dostosowany do otoczenia włączony.</string>
+    <string name="accessibility_quick_settings_ambient_display_changed_off">Aktywny wyświetlacz został wyłączony.</string>
+    <string name="accessibility_quick_settings_ambient_display_changed_on">Aktywny wyświetlacz został włączony.</string>
     <!-- Face Unlock -->
+    <string name="face_unlock_recognizing">Rozpoznawanie twarzy...</string>
 </resources>
