@@ -179,6 +179,7 @@ android_library {
         "vendor.lineage.powershare-V1.0-java",
         "motion_tool_lib",
         "faceunlock_framework",
+        "bcsmartspace-google",
     ],
     manifest: "AndroidManifest.xml",
     additional_manifests: ["tequilaManifest.xml"],
