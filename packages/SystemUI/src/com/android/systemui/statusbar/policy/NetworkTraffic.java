@@ -153,7 +153,7 @@ public class NetworkTraffic extends TextView {
             totalRxBytes = newTotalRxBytes;
             totalTxBytes = newTotalTxBytes;
             mTrafficHandler.removeCallbacksAndMessages(null);
-            if (!isDisabled()) {
+            if (!isDisabled() && mScreenOn) {
                 mTrafficHandler.sendEmptyMessageDelayed(MSG_PERIODIC, INTERVAL);
             } else {
                 setText("");
@@ -188,10 +188,12 @@ public class NetworkTraffic extends TextView {
 
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
                 if (mScreenOn) return;
+                mLastUpdateTime = -1;
                 mScreenOn = true;
                 getHandler().post(NetworkTraffic.this::updateSettings);
             } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 if (!mScreenOn) return;
+                mLastUpdateTime = -1;
                 mScreenOn = false;
                 mTrafficHandler.removeCallbacksAndMessages(null);
             }
@@ -298,7 +300,7 @@ public class NetworkTraffic extends TextView {
         updateTextSize();
         updateTrafficDrawable();
         if (mIsEnabled && mAttached && !isDisabled()) {
-            mLastUpdateTime = SystemClock.elapsedRealtime();
+            mLastUpdateTime = -1;
             mTrafficHandler.sendEmptyMessage(MSG_UPDATE);
             return;
         }
