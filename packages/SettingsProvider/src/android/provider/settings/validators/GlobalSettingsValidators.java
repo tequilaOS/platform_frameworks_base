@@ -197,7 +197,6 @@ public class GlobalSettingsValidators {
         VALIDATORS.put(Global.ADAPTIVE_BATTERY_MANAGEMENT_ENABLED, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Global.POWER_BUTTON_LONG_PRESS_DURATION_MS, NONE_NEGATIVE_LONG_VALIDATOR);
         VALIDATORS.put(Global.STYLUS_EVER_USED, BOOLEAN_VALIDATOR);
-
         VALIDATORS.put(Global.Wearable.HAS_PAY_TOKENS, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Global.Wearable.GMS_CHECKIN_TIMEOUT_MIN, ANY_INTEGER_VALIDATOR);
         VALIDATORS.put(Global.Wearable.HOTWORD_DETECTION_ENABLED, BOOLEAN_VALIDATOR);
@@ -430,5 +429,6 @@ public class GlobalSettingsValidators {
                                 String.valueOf(Global.Wearable.TETHERED_CONFIG_TETHERED)
                         }));
         VALIDATORS.put(Global.Wearable.PHONE_SWITCHING_SUPPORTED, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Global.BLUETOOTH_OFF_TIMEOUT, NON_NEGATIVE_INTEGER_VALIDATOR);
     }
 }
