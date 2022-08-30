@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "539fe869_b42ab2b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000004
+      },
+      "writtenOn": "2022-08-30T08:30:25Z",
+      "side": 1,
+      "message": "Builds with OnePlus Doze from hardware/oneplus. ",
+      "revId": "ac8c0abd1838270767078814558ec79658471ee1",
+      "serverId": "82c648e1-0f2a-489e-ab9c-83444301176e"
+    }
+  ]
+}
