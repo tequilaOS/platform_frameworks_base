@@ -4,4 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Calls and notifications will ring</string>
 </resources>
