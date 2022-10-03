@@ -290,8 +290,13 @@ public class QuickStatusBarHeader extends FrameLayout {
                 mTintedIconManager.setTint(textColor);
             }
             if (mBatteryRemainingIcon.getBatteryStyle() == BATTERY_STYLE_CIRCLE) {
-                textColorSecondary = Utils.getColorAttrDefaultColor(mContext,
-                        android.R.attr.textColorHint);
+                final float factor = 0.3f;
+                textColorSecondary = Color.argb(
+                    Color.alpha(textColor),
+                    Math.round(Color.red(textColor) * factor),
+                    Math.round(Color.green(textColor) * factor),
+                    Math.round(Color.blue(textColor) * factor)
+                );
             }
             mBatteryRemainingIcon.updateColors(mTextColorPrimary, textColorSecondary,
                     mTextColorPrimary);
