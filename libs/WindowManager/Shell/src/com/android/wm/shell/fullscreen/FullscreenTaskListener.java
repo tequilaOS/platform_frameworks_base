@@ -108,6 +108,9 @@ public class FullscreenTaskListener implements ShellTaskOrganizer.TaskListener {
         }
         if (!createdWindowDecor) {
             mSyncQueue.runInSync(t -> {
+            	if (!leash.isValid()) {
+                    return;
+            	}
                 // Reset several properties back to fullscreen (PiP, for example, leaves all these
                 // properties in a bad state).
                 t.setWindowCrop(leash, null);
