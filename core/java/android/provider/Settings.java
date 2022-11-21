@@ -5527,6 +5527,16 @@ public final class Settings {
          * @hide
          */
         public static final String NOTIFICATION_SOUND_VIB_SCREEN_ON = "notification_sound_vib_screen_on";
+        
+       /**
+         * Setting to determine whether or not to show the battery icon drawable in the status bar
+         * (separate from percentage).
+         *    0 - Don't show icon
+         *    1 - Show icon
+         * @hide
+         */
+        @Readable
+        public static final String SHOW_BATTERY_ICON = "status_bar_show_battery_icon";
 
         /**
          * Whether or not to enable multiple audio focus.
