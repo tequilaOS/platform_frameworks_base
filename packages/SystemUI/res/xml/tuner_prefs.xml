@@ -95,6 +95,12 @@
             android:key="alarm_clock"
             android:title="@string/status_bar_alarm" />
 
+        <com.android.systemui.tuner.StatusBarSwitch
+             android:icon="@drawable/ic_statusbar_call_strength"
+             android:key="call_strength"
+             android:title="@string/status_bar_call_strength" />
+
+
         <!-- secure -->
 
         <com.android.systemui.tuner.ClockPreference
