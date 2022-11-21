@@ -20,4 +20,7 @@
     <string name="quick_settings_caffeine_label">Mode Kafein</string>
     <string name="accessibility_quick_settings_caffeine_off">Mode Kafein nonaktif.</string>
     <string name="accessibility_quick_settings_caffeine_on">Mode Kafein aktif.</string>
+    <string name="quick_settings_monotoggle_tile">Mode Audio</string>
+    <string name="quick_settings_monotoggle_tile_mono">Audio Mono</string>
+    <string name="quick_settings_monotoggle_tile_stereo">Audio Stereo</string>
 </resources>
