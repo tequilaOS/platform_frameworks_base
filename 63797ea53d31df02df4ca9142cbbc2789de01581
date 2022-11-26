@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa949b71_861dde1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2022-11-26T16:10:26Z",
+      "side": 1,
+      "message": "To show deep sleep info to Settings \u003e Screen Time",
+      "revId": "63797ea53d31df02df4ca9142cbbc2789de01581",
+      "serverId": "82c648e1-0f2a-489e-ab9c-83444301176e"
+    }
+  ]
+}
