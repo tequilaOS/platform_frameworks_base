@@ -529,6 +529,8 @@ public final class NotificationPanelViewController extends PanelViewController {
     private final NotificationShadeDepthController mDepthController;
     private final int mDisplayId;
 
+    private GestureDetector mDoubleTapGestureListener;
+
     private KeyguardIndicationController mKeyguardIndicationController;
     private int mHeadsUpInset;
     private boolean mHeadsUpPinnedMode;
@@ -871,6 +873,16 @@ public final class NotificationPanelViewController extends PanelViewController {
         });
         mBottomAreaShadeAlphaAnimator.setDuration(160);
         mBottomAreaShadeAlphaAnimator.setInterpolator(Interpolators.ALPHA_OUT);
+        mDoubleTapGestureListener = new GestureDetector(mView.getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent event) {
+                final PowerManager pm = (PowerManager) mView.getContext().getSystemService(
+                        mView.getContext().POWER_SERVICE);
+                pm.goToSleep(event.getEventTime());
+                return true;
+            }
+        });
         mConversationNotificationManager = conversationNotificationManager;
         mAuthController = authController;
         mLockIconViewController = lockIconViewController;
