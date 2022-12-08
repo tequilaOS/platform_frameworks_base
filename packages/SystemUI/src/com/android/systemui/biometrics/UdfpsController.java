@@ -19,8 +19,6 @@ package com.android.systemui.biometrics;
 import static android.hardware.biometrics.BiometricFingerprintConstants.FINGERPRINT_ACQUIRED_GOOD;
 import static android.hardware.biometrics.BiometricOverlayConstants.REASON_AUTH_KEYGUARD;
 
-import static android.hardware.biometrics.BiometricFingerprintConstants.FINGERPRINT_ACQUIRED_VENDOR;
-
 import static com.android.internal.util.Preconditions.checkNotNull;
 import static com.android.systemui.classifier.Classifier.LOCK_ICON;
 import static com.android.systemui.classifier.Classifier.UDFPS_AUTHENTICATION;
@@ -235,7 +233,7 @@ public class UdfpsController implements DozeReceiver {
         @Override
         public void onAcquired(
                 int sensorId,
-                @BiometricFingerprintConstants.FingerprintAcquired int acquiredInfo, int vendorCode
+                @BiometricFingerprintConstants.FingerprintAcquired int acquiredInfo
         ) {
             if (BiometricFingerprintConstants.shouldTurnOffHbm(acquiredInfo)) {
                 boolean acquiredGood = acquiredInfo == FINGERPRINT_ACQUIRED_GOOD;
@@ -254,16 +252,6 @@ public class UdfpsController implements DozeReceiver {
                         mOverlay.onAcquiredGood();
                     }
                 });
-            } else {
-                boolean acquiredVendor = acquiredInfo == FINGERPRINT_ACQUIRED_VENDOR;
-                if (!acquiredVendor || (!mStatusBarStateController.isDozing() && mScreenOn)) {
-                    return;
-                }
-                if (vendorCode == 22) {
-                    mPowerManager.wakeUp(mSystemClock.uptimeMillis(),
-                            PowerManager.WAKE_REASON_GESTURE, TAG);
-                    onAodInterrupt(0, 0, 0, 0);
-                }
             }
         }
 
