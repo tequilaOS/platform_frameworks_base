@@ -32,9 +32,9 @@ import android.widget.ImageView;
 import com.android.systemui.R;
 import com.android.systemui.settings.brightness.BrightnessSliderController;
 import com.android.systemui.settings.brightness.ToggleSlider;
+import com.android.systemui.shade.NotificationPanelViewController;
+import com.android.systemui.shade.NotificationShadeWindowView;
 import com.android.systemui.statusbar.NotificationShadeDepthController;
-import com.android.systemui.statusbar.phone.NotificationPanelViewController;
-import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -78,6 +78,7 @@ public class BrightnessMirrorController
         mVisibilityCallback = visibilityCallback;
         mIcon = (ImageView) mBrightnessMirror.findViewById(R.id.brightness_icon);
         mIcon.setVisibility(View.VISIBLE);
+        updateResources();
     }
 
     public void showMirror() {
@@ -165,6 +166,7 @@ public class BrightnessMirrorController
                 .inflate(R.layout.brightness_mirror_container, mStatusBarWindow, false);
         mToggleSliderController = setMirrorLayout();
         mStatusBarWindow.addView(mBrightnessMirror, index);
+        updateResources();
 
         for (int i = 0; i < mBrightnessMirrorListeners.size(); i++) {
             mBrightnessMirrorListeners.valueAt(i).onBrightnessMirrorReinflated(mBrightnessMirror);
