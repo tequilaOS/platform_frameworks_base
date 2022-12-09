@@ -85,33 +85,36 @@ public class NetworkTraffic extends TextView {
 
         @Override
         public void handleMessage(Message msg) {
+            final boolean isUpdate = msg.what == 1;
             long timeDelta = SystemClock.elapsedRealtime() - mLastUpdateTime;
 
-            if (timeDelta < INTERVAL * .95) {
-                if (msg.what != 1) {
-                    // we just updated the view, nothing further to do
-                    return;
-                }
-                if (timeDelta < 1) {
-                    // Can't div by 0 so make sure the value displayed is minimal
-                    timeDelta = Long.MAX_VALUE;
-                }
+            if ((timeDelta < INTERVAL * .95 && timeDelta < 1) || isUpdate) {
+                timeDelta = Long.MAX_VALUE;
             }
             mLastUpdateTime = SystemClock.elapsedRealtime();
 
-            // Calculate the data rate from the change in total bytes and time
             long newTotalRxBytes = TrafficStats.getTotalRxBytes();
             long newTotalTxBytes = TrafficStats.getTotalTxBytes();
-            long rxData = newTotalRxBytes - totalRxBytes;
-            long txData = newTotalTxBytes - totalTxBytes;
+            long rxData = 0;
+            long txData = 0;
+            iBytes = false;
+            oBytes = false;
 
-            iBytes = (rxData <= (mAutoHideThreshold * 1024L));
-            oBytes = (txData <= (mAutoHideThreshold * 1024L));
+            if (!isUpdate) {
+                // Calculate the data rate from the change in total bytes and time
+                rxData = newTotalRxBytes - totalRxBytes;
+                txData = newTotalTxBytes - totalTxBytes;
+                iBytes = (rxData <= (mAutoHideThreshold * 1024L));
+                oBytes = (txData <= (mAutoHideThreshold * 1024L));
+            } else {
+                totalRxBytes = 0;
+                totalTxBytes = 0;
+            }
 
             if (shouldHide(rxData, txData, timeDelta)) {
                 setText("");
                 setVisibility(View.GONE);
-            } else {
+            } else if (!isUpdate) {
                 String output;
                 switch (mTrafficType) {
                     case UP:
