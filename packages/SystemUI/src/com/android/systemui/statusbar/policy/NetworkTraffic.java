@@ -30,6 +30,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.TrafficStats;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.UserHandle;
 import android.os.Looper;
 import android.os.Message;
@@ -59,6 +60,7 @@ public class NetworkTraffic extends TextView {
     private static final int MB = KB * KB;
     private static final int GB = MB * KB;
     private static final String SYMBOL = "B/s";
+    private static final String THREAD_NAME = "NetworkTraffic";
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("##0.#");
     static {
@@ -79,12 +81,16 @@ public class NetworkTraffic extends TextView {
     boolean mIsEnabled;
     boolean mTrafficInHeaderView;
 
-    private final Handler mTrafficHandler = new Handler(Looper.getMainLooper()) {
+    private final HandlerThread mHandlerThread = new HandlerThread(THREAD_NAME);
+    private Looper mLooper;
+    private Handler mTrafficHandler;
+
+    private final Handler.Callback mTrafficHandlerCallback = new Handler.Callback() {
         private long totalRxBytes;
         private long totalTxBytes;
 
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             final boolean isUpdate = msg.what == 1;
             long timeDelta = SystemClock.elapsedRealtime() - mLastUpdateTime;
 
@@ -112,8 +118,10 @@ public class NetworkTraffic extends TextView {
             }
 
             if (shouldHide(rxData, txData, timeDelta)) {
-                setText("");
-                setVisibility(View.GONE);
+                getHandler().post(() -> {
+                    setText("");
+                    setVisibility(View.GONE);
+                });
             } else if (!isUpdate) {
                 String output;
                 switch (mTrafficType) {
@@ -147,21 +155,29 @@ public class NetworkTraffic extends TextView {
                         break;
                 }
                 // Update view if there's anything new to show
-                if (!output.contentEquals(getText())) setText(output);
-                setVisibility(View.VISIBLE);
+                final String out = output;
+                getHandler().post(() -> {
+                    if (!out.contentEquals(getText())) setText(out);
+                    setVisibility(View.VISIBLE);
+                });
             }
-            updateTrafficDrawable();
+            getHandler().post(NetworkTraffic.this::updateTrafficDrawable);
 
             // Post delayed message to refresh in ~1000ms
             totalRxBytes = newTotalRxBytes;
             totalTxBytes = newTotalTxBytes;
             mTrafficHandler.removeCallbacksAndMessages(null);
             if (!isDisabled() && mScreenOn) {
-                mTrafficHandler.sendEmptyMessageDelayed(MSG_PERIODIC, INTERVAL);
+                mTrafficHandler.sendEmptyMessageDelayed(MSG_PERIODIC,
+                        isUpdate ? 0 : INTERVAL);
             } else {
-                setText("");
-                setVisibility(View.GONE);
+                getHandler().post(() -> {
+                    setText("");
+                    setVisibility(View.GONE);
+                });
             }
+
+            return true;
         }
 
         private String formatOutput(long timeDelta, long data) {
@@ -203,7 +219,8 @@ public class NetworkTraffic extends TextView {
     };
 
     private final ConnectivityManager mConnectivityManager;
-    private final ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
+    private final ConnectivityManager.NetworkCallback mNetworkCallback =
+            new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
             if (mIsConnected) return;
@@ -219,13 +236,14 @@ public class NetworkTraffic extends TextView {
         }
     };
 
+    private final SettingsObserver mSettingsObserver = new SettingsObserver(getHandler());
     private class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
         }
 
-        private void start() {
-            ContentResolver resolver = getContext().getContentResolver();
+        void start() {
+            final ContentResolver resolver = getContext().getContentResolver();
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.NETWORK_TRAFFIC_STATE), false,
                     this, UserHandle.USER_ALL);
@@ -244,6 +262,10 @@ public class NetworkTraffic extends TextView {
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.NETWORK_TRAFFIC_FONT_SIZE), false,
                     this, UserHandle.USER_ALL);
+        }
+
+        void stop() {
+            getContext().getContentResolver().unregisterContentObserver(this);
         }
 
         @Override
@@ -266,10 +288,6 @@ public class NetworkTraffic extends TextView {
         setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mIsConnected = mConnectivityManager.getActiveNetwork() != null;
-        SettingsObserver settingsObserver = new SettingsObserver(getHandler());
-        settingsObserver.start();
-        setMode();
-        updateSettings();
     }
 
     @Override
@@ -277,12 +295,17 @@ public class NetworkTraffic extends TextView {
         super.onAttachedToWindow();
         if (!mAttached) {
             mAttached = true;
+            mHandlerThread.start();
+            mLooper = mHandlerThread.getLooper();
+            mTrafficHandler = new Handler(mLooper, mTrafficHandlerCallback);
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_SCREEN_OFF);
             filter.addAction(Intent.ACTION_SCREEN_ON);
             getContext().registerReceiver(mIntentReceiver, filter, null, getHandler());
             mConnectivityManager.registerDefaultNetworkCallback(mNetworkCallback);
+            mSettingsObserver.start();
         }
+        setMode();
         updateSettings();
     }
 
@@ -292,6 +315,8 @@ public class NetworkTraffic extends TextView {
         if (mAttached) {
             getContext().unregisterReceiver(mIntentReceiver);
             mConnectivityManager.unregisterNetworkCallback(mNetworkCallback);
+            mSettingsObserver.stop();
+            mHandlerThread.quit();
             mAttached = false;
         }
     }
@@ -301,12 +326,11 @@ public class NetworkTraffic extends TextView {
         setVisibility(View.GONE);
         updateTextSize();
         updateTrafficDrawable();
+        mTrafficHandler.removeCallbacksAndMessages(null);
         if (mIsEnabled && mAttached && !isDisabled()) {
             mLastUpdateTime = SystemClock.elapsedRealtime();
             mTrafficHandler.sendEmptyMessage(MSG_UPDATE);
-            return;
         }
-        mTrafficHandler.removeCallbacksAndMessages(null);
     }
 
     void setMode() {
