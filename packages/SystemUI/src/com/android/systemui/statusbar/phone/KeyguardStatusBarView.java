@@ -48,6 +48,7 @@ import com.android.systemui.R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.battery.BatteryMeterView;
 import com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver;
+import com.android.systemui.statusbar.policy.NetworkTrafficSB;
 import com.android.systemui.statusbar.phone.userswitcher.StatusBarUserSwitcherContainer;
 import com.android.systemui.user.ui.binder.StatusBarUserChipViewBinder;
 import com.android.systemui.user.ui.viewmodel.StatusBarUserChipViewModel;
@@ -72,6 +73,7 @@ public class KeyguardStatusBarView extends RelativeLayout {
     private TextView mCarrierLabel;
     private ImageView mMultiUserAvatar;
     private BatteryMeterView mBatteryView;
+    private NetworkTrafficSB mNetworkTraffic;
     private StatusIconContainer mStatusIconContainer;
     private StatusBarUserSwitcherContainer mUserSwitcherContainer;
 
@@ -116,6 +118,7 @@ public class KeyguardStatusBarView extends RelativeLayout {
         mMultiUserAvatar = findViewById(R.id.multi_user_avatar);
         mCarrierLabel = findViewById(R.id.keyguard_carrier_text);
         mBatteryView = mSystemIconsContainer.findViewById(R.id.battery);
+        mNetworkTraffic = mSystemIconsContainer.findViewById(R.id.networkTraffic);
         mCutoutSpace = findViewById(R.id.cutout_space_view);
         mStatusIconArea = findViewById(R.id.status_icon_area);
         mStatusIconContainer = findViewById(R.id.statusIcons);
@@ -462,6 +465,7 @@ public class KeyguardStatusBarView extends RelativeLayout {
                 R.color.light_mode_icon_color_single_tone);
         float intensity = textColor == Color.WHITE ? 0 : 1;
         mCarrierLabel.setTextColor(iconColor);
+        mNetworkTraffic.setTintColor(iconColor);
 
         TextView userSwitcherName = mUserSwitcherContainer.findViewById(R.id.current_user_name);
         if (userSwitcherName != null) {
@@ -476,6 +480,7 @@ public class KeyguardStatusBarView extends RelativeLayout {
 
         applyDarkness(R.id.battery, mEmptyTintRect, intensity, iconColor);
         applyDarkness(R.id.clock, mEmptyTintRect, intensity, iconColor);
+        applyDarkness(R.id.networkTraffic, mEmptyTintRect, intensity, iconColor);
     }
 
     private void applyDarkness(int id, ArrayList<Rect> tintAreas, float intensity, int color) {

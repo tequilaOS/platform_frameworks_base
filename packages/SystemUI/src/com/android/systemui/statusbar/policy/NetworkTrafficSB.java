@@ -46,18 +46,6 @@ public class NetworkTrafficSB extends NetworkTraffic implements DarkReceiver {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        Dependency.get(DarkIconDispatcher.class).addDarkReceiver(this);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        Dependency.get(DarkIconDispatcher.class).removeDarkReceiver(this);
-    }
-
-    @Override
     public void onDarkChanged(ArrayList<Rect> area, float darkIntensity, int tint) {
         setTintColor(DarkIconDispatcher.getTint(area, this, tint));
     }
