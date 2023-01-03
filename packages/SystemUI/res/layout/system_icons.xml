@@ -33,11 +33,12 @@
 
         <com.android.systemui.statusbar.policy.NetworkTrafficSB
             android:id="@+id/networkTraffic"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
-            android:gravity="center_vertical|end" />
+            android:gravity="center_vertical|end"
+            android:autoSizeTextType="uniform" />
 
     </com.android.keyguard.AlphaOptimizedLinearLayout>
 

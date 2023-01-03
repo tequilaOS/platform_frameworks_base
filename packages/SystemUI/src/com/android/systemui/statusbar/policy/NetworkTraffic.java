@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuff.Mode;
+import android.hardware.display.DisplayManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.TrafficStats;
@@ -68,9 +69,11 @@ public class NetworkTraffic extends TextView {
         decimalFormat.setMaximumFractionDigits(1);
     }
 
+    private float mDisplayDensity;
     private long mLastUpdateTime;
     private int mTrafficType;
     private int mAutoHideThreshold;
+    private int mFontSize;
     private boolean mShowArrow;
     private boolean mAttached;
     private boolean mIsConnected;
@@ -81,6 +84,7 @@ public class NetworkTraffic extends TextView {
     boolean mIsEnabled;
     boolean mTrafficInHeaderView;
 
+    private final int mResourceFontSize;
     private final HandlerThread mHandlerThread = new HandlerThread(THREAD_NAME);
     private Looper mLooper;
     private Handler mTrafficHandler;
@@ -154,11 +158,19 @@ public class NetworkTraffic extends TextView {
                         else oBytes = true;
                         break;
                 }
+                if (!mTrafficInHeaderView) {
+                    // don't show a vary tiny text (4dp minimum)
+                    // if we reached this size just hide the entire view
+                    final float dpTextSize = getTextSize() / mDisplayDensity;
+                    if (dpTextSize < 4f) output = "";
+                }
                 // Update view if there's anything new to show
                 final String out = output;
                 getHandler().post(() -> {
-                    if (!out.contentEquals(getText())) setText(out);
-                    setVisibility(View.VISIBLE);
+                    if (!out.contentEquals(getText())) {
+                        setText(out);
+                        setVisibility(out != "" ? View.VISIBLE : View.GONE);
+                    }
                 });
             }
             getHandler().post(NetworkTraffic.this::updateTrafficDrawable);
@@ -236,6 +248,23 @@ public class NetworkTraffic extends TextView {
         }
     };
 
+    private final DisplayManager mDisplayManager;
+    private final DisplayManager.DisplayListener mDisplayListener =
+            new DisplayManager.DisplayListener() {
+        @Override
+        public void onDisplayAdded(int displayId) { /* Do nothing */ }
+
+        @Override
+        public void onDisplayRemoved(int displayId) { /* Do nothing */ }
+
+        @Override
+        public void onDisplayChanged(int displayId) {
+            if (getDisplay().getDisplayId() != displayId) return;
+            mDisplayDensity = getResources().getDisplayMetrics().density;
+            if (mScreenOn) getHandler().post(NetworkTraffic.this::updateSettings);
+        }
+    };
+
     private final SettingsObserver mSettingsObserver = new SettingsObserver(getHandler());
     private class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
@@ -287,7 +316,8 @@ public class NetworkTraffic extends TextView {
         super(context, attrs, defStyle);
         setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mIsConnected = mConnectivityManager.getActiveNetwork() != null;
+        mDisplayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+        mResourceFontSize = getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size);
     }
 
     @Override
@@ -298,10 +328,13 @@ public class NetworkTraffic extends TextView {
             mHandlerThread.start();
             mLooper = mHandlerThread.getLooper();
             mTrafficHandler = new Handler(mLooper, mTrafficHandlerCallback);
+            mDisplayDensity = getResources().getDisplayMetrics().density;
+            mIsConnected = mConnectivityManager.getActiveNetwork() != null;
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_SCREEN_OFF);
             filter.addAction(Intent.ACTION_SCREEN_ON);
             getContext().registerReceiver(mIntentReceiver, filter, null, getHandler());
+            mDisplayManager.registerDisplayListener(mDisplayListener, getHandler());
             mConnectivityManager.registerDefaultNetworkCallback(mNetworkCallback);
             mSettingsObserver.start();
         }
@@ -314,6 +347,7 @@ public class NetworkTraffic extends TextView {
         super.onDetachedFromWindow();
         if (mAttached) {
             getContext().unregisterReceiver(mIntentReceiver);
+            mDisplayManager.unregisterDisplayListener(mDisplayListener);
             mConnectivityManager.unregisterNetworkCallback(mNetworkCallback);
             mSettingsObserver.stop();
             mHandlerThread.quit();
@@ -321,7 +355,7 @@ public class NetworkTraffic extends TextView {
         }
     }
 
-    void updateSettings() {
+    private void updateSettings() {
         setText("");
         setVisibility(View.GONE);
         updateTextSize();
@@ -333,7 +367,7 @@ public class NetworkTraffic extends TextView {
         }
     }
 
-    void setMode() {
+    private void setMode() {
         ContentResolver resolver = getContext().getContentResolver();
         mIsEnabled = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_STATE, 0,
@@ -350,9 +384,12 @@ public class NetworkTraffic extends TextView {
         mTrafficInHeaderView = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_VIEW_LOCATION, 0,
                 UserHandle.USER_CURRENT) == 1;
+        mFontSize = Settings.System.getIntForUser(getContext().getContentResolver(),
+                Settings.System.NETWORK_TRAFFIC_FONT_SIZE, 10,
+                UserHandle.USER_CURRENT);
     }
 
-    void updateTrafficDrawable() {
+    private void updateTrafficDrawable() {
         int intTrafficDrawable = 0;
         if (mIsEnabled && mShowArrow && !isDisabled()) {
             switch (mTrafficType) {
@@ -387,22 +424,6 @@ public class NetworkTraffic extends TextView {
         setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
     }
 
-    private void updateTextSize() {
-        if (isDisabled()) return;
-        int size;
-        if (mTrafficType != BOTH) {
-            size = Settings.System.getIntForUser(getContext().getContentResolver(),
-                    Settings.System.NETWORK_TRAFFIC_FONT_SIZE, 10,
-                    UserHandle.USER_CURRENT);
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float)size);
-            setMaxLines(1);
-        } else {
-            size = getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size);
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)size);
-            setMaxLines(2);
-        }
-    }
-
     public void setTintColor(int color) {
         setTextColor(color);
         updateTrafficDrawable();
@@ -410,5 +431,25 @@ public class NetworkTraffic extends TextView {
 
     boolean isDisabled() {
         return !mIsEnabled || !mTrafficInHeaderView;
+    }
+
+    /**
+     * updates the text size and properties according to user settings
+     * @return array of int. index 0 contains the size and index 1 the unit. null if disabled
+     */
+    int[] updateTextSize() {
+        if (isDisabled()) return null;
+        int size = mResourceFontSize;
+        int unit = TypedValue.COMPLEX_UNIT_PX;
+        if (mTrafficType == BOTH) {
+            if (mTrafficInHeaderView) setTextSize(unit, (float)size);
+            setMaxLines(2);
+            return new int[] { size, unit };
+        }
+        size = mFontSize;
+        unit = TypedValue.COMPLEX_UNIT_DIP;
+        if (mTrafficInHeaderView) setTextSize(unit, (float)size);
+        setMaxLines(1);
+        return new int[] { size, unit };
     }
 }

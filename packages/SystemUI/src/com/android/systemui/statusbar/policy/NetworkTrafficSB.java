@@ -21,7 +21,6 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 
 import android.view.ViewGroup;
-import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver;
 
@@ -48,6 +47,16 @@ public class NetworkTrafficSB extends NetworkTraffic implements DarkReceiver {
     @Override
     public void onDarkChanged(ArrayList<Rect> area, float darkIntensity, int tint) {
         setTintColor(DarkIconDispatcher.getTint(area, this, tint));
+    }
+
+    @Override
+    int[] updateTextSize() {
+        final int[] arr = super.updateTextSize();
+        if (arr == null) return null;
+        final int size = arr[0];
+        final int unit = arr[1];
+        setAutoSizeTextTypeUniformWithConfiguration(1, size, 1, unit);
+        return arr;
     }
 
     @Override
