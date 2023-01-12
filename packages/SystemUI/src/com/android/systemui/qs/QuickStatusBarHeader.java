@@ -17,7 +17,10 @@ package com.android.systemui.qs;
 import static android.app.StatusBarManager.DISABLE2_QUICK_SETTINGS;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -37,8 +40,10 @@ import androidx.annotation.Nullable;
 
 import com.android.internal.policy.SystemBarUtils;
 import com.android.settingslib.Utils;
+import com.android.systemui.Dependency;
 import com.android.systemui.R;
 import com.android.systemui.battery.BatteryMeterView;
+import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider;
 import com.android.systemui.statusbar.phone.StatusBarIconController.TintedIconManager;
 import com.android.systemui.statusbar.phone.StatusIconContainer;
@@ -47,6 +52,7 @@ import com.android.systemui.statusbar.policy.VariableDateView;
 import com.android.systemui.util.LargeScreenUtils;
 
 import java.util.List;
+import android.provider.AlarmClock;
 
 /**
  * View that contains the top-most bits of the QS panel (primarily the status bar with date, time,
@@ -159,6 +165,13 @@ public class QuickStatusBarHeader extends FrameLayout {
                 .addFloat(mIconContainer, "alpha", 0, 1)
                 .addFloat(mBatteryRemainingIcon, "alpha", 0, 1)
                 .build();
+
+        mClockView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Dependency.get(ActivityStarter.class).postStartActivityDismissingKeyguard(new Intent(
+                    AlarmClock.ACTION_SHOW_ALARMS), 0);
+            }
+        });
     }
 
     void onAttach(TintedIconManager iconManager,
