@@ -85,6 +85,8 @@ import com.android.systemui.monet.scheme.SchemeRainbow;
 import com.android.systemui.monet.scheme.SchemeTonalSpot;
 import com.android.systemui.monet.scheme.SchemeVibrant;
 import com.android.systemui.settings.UserTracker;
+import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener;
 import com.android.systemui.util.settings.SecureSettings;
@@ -118,8 +120,6 @@ import javax.inject.Inject;
 public class ThemeOverlayController implements CoreStartable, Dumpable {
     protected static final String TAG = "ThemeOverlayController";
     private static final boolean DEBUG = true;
-
-    protected static String SYSTEM_BLACK_THEME = "system_black_theme";
 
     private final ThemeOverlayApplier mThemeManager;
     private final UserManager mUserManager;
@@ -169,6 +169,8 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
     private boolean mDeferredThemeEvaluation;
     // Determines if we should ignore THEME_CUSTOMIZATION_OVERLAY_PACKAGES setting changes.
     private boolean mSkipSettingChange;
+
+    private final ConfigurationController mConfigurationController;
 
     private final DeviceProvisionedListener mDeviceProvisionedListener =
             new DeviceProvisionedListener() {
@@ -395,7 +397,8 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
             FeatureFlags featureFlags,
             @Main Resources resources,
             WakefulnessLifecycle wakefulnessLifecycle,
-            UiModeManager uiModeManager) {
+            UiModeManager uiModeManager,
+            ConfigurationController configurationController) {
         mContext = context;
         mIsMonochromaticEnabled = featureFlags.isEnabled(Flags.MONOCHROMATIC_THEME);
         mIsMonetEnabled = featureFlags.isEnabled(Flags.MONET);
@@ -412,6 +415,7 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
         mResources = resources;
         mWakefulnessLifecycle = wakefulnessLifecycle;
         mUiModeManager = uiModeManager;
+        mConfigurationController = configurationController;
         dumpManager.registerDumpable(TAG, this);
     }
 
@@ -454,6 +458,31 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
             // Force reload so that we update even when the main color has not changed
             reevaluateSystemTheme(true /* forceReload */);
         });
+        mSecureSettings.registerContentObserverForUser(
+                Settings.Secure.getUriFor(Settings.Secure.SYSTEM_BLACK_THEME),
+                false,
+                new ContentObserver(mBgHandler) {
+                    @Override
+                    public void onChange(boolean selfChange, Collection<Uri> collection, int flags,
+                            int userId) {
+                        if (DEBUG) Log.d(TAG, "Overlay changed for user: " + userId);
+                        if (mUserTracker.getUserId() != userId) {
+                            return;
+                        }
+                        if (!mDeviceProvisionedController.isUserSetup(userId)) {
+                            Log.i(TAG, "Theme application deferred when setting changed.");
+                            mDeferredThemeEvaluation = true;
+                            return;
+                        }
+                        if (mSkipSettingChange) {
+                            if (DEBUG) Log.d(TAG, "Skipping setting change");
+                            mSkipSettingChange = false;
+                            return;
+                        }
+                        reevaluateSystemTheme(true /* forceReload */);
+                    }
+                },
+                UserHandle.USER_ALL);
 
         if (!mIsMonetEnabled) {
             return;
@@ -508,6 +537,7 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 }
             }
         });
+        mConfigurationController.addCallback(mConfigurationListener);
     }
 
     private void reevaluateSystemTheme(boolean forceReload) {
@@ -774,7 +804,10 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                             Collectors.joining(", ")));
         }
 
-        boolean isBlackTheme = mSecureSettings.getInt(SYSTEM_BLACK_THEME, 0) == 1;
+        boolean nightMode = (mContext.getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        boolean isBlackTheme = mSecureSettings.getInt(Settings.Secure.SYSTEM_BLACK_THEME, 0) == 1
+                                && nightMode;
 
         mThemeManager.setIsBlackTheme(isBlackTheme);
 
@@ -818,6 +851,13 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
         }
         return style;
     }
+
+    private final ConfigurationListener mConfigurationListener = new ConfigurationListener() {
+        @Override
+        public void onUiModeChanged() {
+            reevaluateSystemTheme(true /* forceReload */);
+        }
+    };
 
     @Override
     public void dump(@NonNull PrintWriter pw, @NonNull String[] args) {
