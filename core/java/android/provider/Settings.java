@@ -5550,6 +5550,15 @@ public final class Settings {
         public static final String SHOW_BATTERY_PERCENT_INSIDE = "status_bar_show_battery_percent_inside";
 
         /**
+         * Setting to determine whether or not to show the battery percentage in the status bar when charging
+         *    0 - Don't show percentage
+         *    1 - Show percentage
+         * @hide
+         */
+        @Readable
+        public static final String SHOW_BATTERY_PERCENT_CHARGING = "status_bar_show_battery_percent_charging";
+
+        /**
          * IMPORTANT: If you add a new public settings you also have to add it to
          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
          * it to PRIVATE_SETTINGS below. Also add a validator that can validate
