@@ -15,5 +15,5 @@
      limitations under the License.
 -->
 <resources>
-    <string name="face_unlock_disabled_idle">Face unlock dinonaktifkan karena tidak ada aktivitas</string>
+    <string name="face_unlock_disabled_idle">Gesichtserkennung wurde wegen Inaktivität deaktiviert</string>
 </resources>
