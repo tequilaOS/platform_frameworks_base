@@ -144,6 +144,16 @@
                     android:layout_marginEnd="@dimen/status_bar_user_chip_end_margin"
                     layout="@layout/status_bar_user_chip_container" />
 
+                <com.android.systemui.statusbar.policy.NetworkTrafficSB
+                    android:id="@+id/networkTraffic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:singleLine="false"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="right|center_vertical"/>
+
                 <include layout="@layout/system_icons" />
             </com.android.keyguard.AlphaOptimizedLinearLayout>
         </FrameLayout>
