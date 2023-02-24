@@ -16,6 +16,7 @@
 
 package android.provider.settings.validators;
 
+import static android.provider.settings.validators.SettingsValidators.ANY_INTEGER_VALIDATOR;
 import static android.provider.settings.validators.SettingsValidators.ANY_STRING_VALIDATOR;
 import static android.provider.settings.validators.SettingsValidators.BOOLEAN_VALIDATOR;
 import static android.provider.settings.validators.SettingsValidators.COMPONENT_NAME_VALIDATOR;
@@ -213,5 +214,7 @@ public class SystemSettingsValidators {
         VALIDATORS.put(System.QS_SHOW_BATTERY_ESTIMATE, BOOLEAN_VALIDATOR);
         VALIDATORS.put(System.STATUS_BAR_BATTERY_STYLE, new InclusiveIntegerRangeValidator(0, 2));
         VALIDATORS.put(System.SHOW_BATTERY_PERCENT_INSIDE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(System.NETWORK_TRAFFIC_STATE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(System.NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD, ANY_INTEGER_VALIDATOR);
     }
 }
