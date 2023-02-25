@@ -1,4 +1,0 @@
-# Bug component: 1157642
-include /services/core/java/com/android/server/wm/OWNERS
-natanieljr@google.com
-pablogamito@google.com
