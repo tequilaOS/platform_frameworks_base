@@ -16,4 +16,10 @@
 -->
 <resources>
     <string name="face_unlock_disabled_idle">Face unlock dinonaktifkan karena tidak ada aktivitas</string>
+    <string name="reboot_to_bootloader_title">Mulai ulang ke bootloader</string>
+    <string name="reboot_to_bootloader_message">Memulai ulang ke bootloader\u2026</string>
+    <string name="reboot_to_recovery_title">Mulai ulang ke recovery</string>
+    <string name="reboot_to_recovery_message">Memulai ulang ke recovery\u2026</string>
+    <string name="reboot_system_title">Mulai ulang sistem</string>
+    <string name="reboot_system_message">Memulai ulang sistem\u2026</string>
 </resources>

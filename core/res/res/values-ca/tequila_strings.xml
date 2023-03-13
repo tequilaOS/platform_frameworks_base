@@ -15,11 +15,11 @@
      limitations under the License.
 -->
 <resources>
-    <string name="face_unlock_disabled_idle">Rozpoznawanie twarzy wyłączone z powodu braku aktywności</string>
-    <string name="reboot_to_bootloader_title">Zrestartuj do bootloadera</string>
-    <string name="reboot_to_bootloader_message">Restartowanie do bootloadera\u2026</string>
-    <string name="reboot_to_recovery_title">Zrestartuj do recovery</string>
-    <string name="reboot_to_recovery_message">Restartowanie do recovery\u2026</string>
-    <string name="reboot_system_title">Zrestartuj do systemu</string>
-    <string name="reboot_system_message">Restartowanie do systemu\u2026</string>
+    <string name="face_unlock_disabled_idle">Desbloqueig facial desactivat a causa de la inactivitat</string>
+    <string name="reboot_to_bootloader_title">Reinici al carregador d\'arrancada</string>
+    <string name="reboot_to_bootloader_message">Reiniciant al carregador d\'arrencada\u2026</string>
+    <string name="reboot_to_recovery_title">Reinicia a recuperació</string>
+    <string name="reboot_to_recovery_message">Reiniciant al mode recuperació\u2026</string>
+    <string name="reboot_system_title">Reinicia el sistema</string>
+    <string name="reboot_system_message">Reiniciant el sistema\u2026</string>
 </resources>

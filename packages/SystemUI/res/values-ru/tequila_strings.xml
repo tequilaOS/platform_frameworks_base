@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022 tequilaOS Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="quick_settings_caffeine_label">Кофеин</string>
+    <string name="accessibility_quick_settings_caffeine_off">Кофеин выкл.</string>
+    <string name="accessibility_quick_settings_caffeine_on">Кофеин вкл.</string>
+    <string name="quick_settings_heads_up_label">Всплывающие уведомления</string>
+    <string name="accessibility_quick_settings_heads_up_off">Всплывающие уведомления выкл.</string>
+    <string name="accessibility_quick_settings_heads_up_on">Всплывающие уведомления вкл.</string>
+    <string name="quick_settings_compass_label">Компас</string>
+    <string name="quick_settings_compass_value"><xliff:g id="degrees">%1$.0f</xliff:g>\u00b0 <xliff:g id="direction">%2$s</xliff:g></string>
+    <string name="quick_settings_compass_init">Инициализация\u2026</string>
+    <string name="quick_settings_compass_N">С</string>
+    <string name="quick_settings_compass_NE">СВ</string>
+    <string name="quick_settings_compass_E">В</string>
+    <string name="quick_settings_compass_SE">ЮВ</string>
+    <string name="quick_settings_compass_S">Ю</string>
+    <string name="quick_settings_compass_SW">ЮЗ</string>
+    <string name="quick_settings_compass_W">З</string>
+    <string name="quick_settings_compass_NW">СЗ</string>
+    <string name="status_bar_call_strength">Уровень сигнала</string>
+    <string name="face_unlock_recognizing">Распознавание лица...</string>
+    <string name="volume_ringer_priority_only">Приоритет</string>
+    <string name="volume_ringer_alarms_only">Будильники</string>
+    <string name="volume_ringer_dnd">Не беспокоить</string>
+    <string name="tristate_flashlight">Фонарик</string>
+    <string name="tristate_flashlight_on">Фонарик вкл.</string>
+    <string name="tristate_flashlight_off">Фонарик выкл.</string>
+    <string name="tristate_flashlight_blink">Мигание</string>
+    <string name="tristate_brightness_bright">Максимальная яркость</string>
+    <string name="tristate_brightness_dark">Минимальная яркость</string>
+    <string name="tristate_brightness_auto">Авто яркость</string>
+    <string name="tristate_rotation_auto">Авто поворот</string>
+    <string name="tristate_rotation_0">Портретная</string>
+    <string name="tristate_rotation_90">Ландшафтная (90°)</string>
+    <string name="tristate_rotation_270">Ландшафтная (270°)</string>
+    <string name="global_action_reboot">Перезапуск</string>
+    <string name="global_action_reboot_more">Перезапускаем\u2026</string>
+    <string name="global_action_reboot_sub">Система</string>
+    <string name="global_action_reboot_recovery">Рекавери</string>
+    <string name="global_action_reboot_bootloader">Загрузчик</string>
+    <string name="global_action_settings">Настройки</string>
+    <string name="quick_settings_powershare_label">Передача заряда батареи</string>
+    <string name="quick_settings_powershare_off_powersave_label">Передача заряда батареи выкл.\nПередача заряда батареи выкл.</string>
+    <string name="quick_settings_powershare_off_low_battery_label">Передача заряда батареи выключена\nЗаряд батареи слишком низкий</string>
+    <string name="quick_settings_powershare_enabled_label">Передача заряда батареи включена</string>
+    <string name="status_bar_nfc">NFC</string>
+    <string name="accessibility_status_bar_nfc">Nfc</string>
+    <string name="bluetooth_is_off">Bluetooth выключен</string>
+    <string name="tap_a_device_to_connect">Нажмите на устройство для подключения</string>
+</resources>
