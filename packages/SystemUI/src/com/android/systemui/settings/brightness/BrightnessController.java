@@ -328,7 +328,7 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
     private void setMode(int mode) {
         Settings.System.putIntForUser(mContext.getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE, mode,
-                mUserTracker.getCurrentUserId());
+                mUserTracker.getUserId());
     }
 
     public void registerCallbacks() {
