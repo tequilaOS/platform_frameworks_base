@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29000915_01915545",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2023-03-24T06:42:34Z",
+      "side": 1,
+      "message": "Please rebase on QPR2 to avoid conflict solving when repopicking",
+      "revId": "dd25af4900bf52649469eddb02c7eb743cae683f",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    }
+  ]
+}
