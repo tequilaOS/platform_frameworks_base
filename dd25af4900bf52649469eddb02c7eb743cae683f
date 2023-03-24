@@ -16,6 +16,24 @@
       "message": "Please rebase on QPR2 to avoid conflict solving when repopicking",
       "revId": "dd25af4900bf52649469eddb02c7eb743cae683f",
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f507a94_3852425f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2023-03-24T06:48:55Z",
+      "side": 1,
+      "message": "You can upload your patchset with the conflict resolved if you want.",
+      "parentUuid": "29000915_01915545",
+      "revId": "dd25af4900bf52649469eddb02c7eb743cae683f",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     }
   ]
 }
