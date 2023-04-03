@@ -61,6 +61,8 @@ public class QSFooterViewControllerTest extends LeakCheckedTest {
     @Mock
     private ClipboardManager mClipboardManager;
     @Mock
+    private TextView mBuildText;
+    @Mock
     private FalsingManager mFalsingManager;
     @Mock
     private ActivityStarter mActivityStarter;
@@ -83,6 +85,7 @@ public class QSFooterViewControllerTest extends LeakCheckedTest {
         when(mUserTracker.getUserContext()).thenReturn(mContext);
 
         when(mView.isAttachedToWindow()).thenReturn(true);
+        when(mView.findViewById(R.id.build)).thenReturn(mBuildText);
         when(mView.findViewById(android.R.id.edit)).thenReturn(mEditButton);
 
         mController = new QSFooterViewController(mView, mUserTracker, mFalsingManager,
@@ -96,6 +99,11 @@ public class QSFooterViewControllerTest extends LeakCheckedTest {
         String text = "TEST";
         ArgumentCaptor<View.OnLongClickListener> onLongClickCaptor =
                 ArgumentCaptor.forClass(View.OnLongClickListener.class);
+
+        verify(mBuildText).setOnLongClickListener(onLongClickCaptor.capture());
+
+        when(mBuildText.getText()).thenReturn(text);
+        onLongClickCaptor.getValue().onLongClick(mBuildText);
 
         ArgumentCaptor<ClipData> captor = ArgumentCaptor.forClass(ClipData.class);
         verify(mClipboardManager).setPrimaryClip(captor.capture());
