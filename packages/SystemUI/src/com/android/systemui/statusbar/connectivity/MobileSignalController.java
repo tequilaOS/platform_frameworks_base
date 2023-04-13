@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.os.SystemProperties;
 import android.provider.Settings.Global;
 import android.telephony.AccessNetworkConstants;
 import android.telephony.CellSignalStrength;
