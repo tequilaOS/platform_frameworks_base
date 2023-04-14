@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="volume_dialog_ringer_guidance_normal">Les trucades i les notificacions sonaran</string>
+    <string name="reboot_to_bootloader_title">Reinici al carregador d\'arrancada</string>
+    <string name="reboot_to_bootloader_message">Reiniciant al carregador d\'arrencada\u2026</string>
+    <string name="reboot_to_recovery_title">Reinicia a recuperació</string>
+    <string name="reboot_to_recovery_message">Reiniciant al mode recuperació\u2026</string>
+    <string name="reboot_system_title">Reinicia el sistema</string>
+    <string name="reboot_system_message">Reiniciant el sistema\u2026</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="volume_dialog_ringer_guidance_normal">Las llamadas y notificaciones sonarán</string>
+    <string name="reboot_to_bootloader_title">Reiniciar bootloader</string>
+    <string name="reboot_to_bootloader_message">Reiniciando en bootloader\u2026</string>
+    <string name="reboot_to_recovery_title">Reiniciar en recovery</string>
+    <string name="reboot_to_recovery_message">Reiniciando en recovery\u2026</string>
+    <string name="reboot_system_title">Reiniciar sistema</string>
+    <string name="reboot_system_message">Reiniciando sistema\u2026</string>
+</resources>
