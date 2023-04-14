@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="volume_dialog_ringer_guidance_normal">Звонки и уведомления будут звучать</string>
+    <string name="reboot_to_bootloader_title">Перезагрузиться в загрузчик</string>
+    <string name="reboot_to_bootloader_message">Перезагружаемся в загрузчик\u2026</string>
+    <string name="reboot_to_recovery_title">Перезагрузиться в рекавери</string>
+    <string name="reboot_to_recovery_message">Перезагружаемся в рекавери\u2026</string>
+    <string name="reboot_system_title">Перезагрузить систему</string>
+    <string name="reboot_system_message">Перезагружаем систему\u2026</string>
+</resources>

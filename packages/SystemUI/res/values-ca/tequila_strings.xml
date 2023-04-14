@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="status_bar_call_strength">Intensitat del senyal</string>
+    <string name="bluetooth_is_off">El Bluetooth està desactivat</string>
+    <string name="tap_a_device_to_connect">Toca un dispositiu per connectar-te</string>
+    <string name="quick_settings_powershare_label">Compartir bateria</string>
+    <string name="quick_settings_powershare_off_powersave_label">Compartir bateria desactivat\nEstalvi de bateria</string>
+    <string name="quick_settings_powershare_off_low_battery_label">Compartir bateria desactivat\nNivell de bateria massa baix</string>
+    <string name="quick_settings_powershare_enabled_label">La compartició de bateria està activada</string>
+    <string name="status_bar_nfc">NFC</string>
+    <string name="accessibility_status_bar_nfc">NFC</string>
+    <string name="global_action_reboot">Reinicia</string>
+    <string name="global_action_reboot_more">Reinicia\u2026</string>
+    <string name="global_action_reboot_sub">Sistema</string>
+    <string name="global_action_reboot_recovery">Mode recuperació</string>
+    <string name="global_action_reboot_bootloader">Gestor d\'arrencada</string>
+    <string name="global_action_settings">Configuració</string>
+</resources>
