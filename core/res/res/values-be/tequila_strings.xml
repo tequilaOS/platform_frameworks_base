@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="volume_dialog_ringer_guidance_normal">Гукавы сігнал для званкоў і апавяшчэнняў уключаны</string>
+    <string name="reboot_to_bootloader_title">Перазагрузка ў загрузчык</string>
+    <string name="reboot_to_bootloader_message">Перазагружаемся ў загрузчык\u2026</string>
+    <string name="reboot_to_recovery_title">Перазагрузка ў рэкаверы</string>
+    <string name="reboot_to_recovery_message">Перазагружаемся ў рэкаверы\u2026</string>
+    <string name="reboot_system_title">Перазагрузіць сістэму</string>
+    <string name="reboot_system_message">Перазагружаемся ў сістэму\u2026</string>
+    <string name="face_unlock_disabled_idle">Разблакіроўка па твару адключана з-за не актыўнасці</string>
+    <string name="permlab_fakePackageSignature">Падмена сігнатуры пакетаў</string>
+    <string name="permdesc_fakePackageSignature">Дазваляе прыкладанням прыкідвацца іншымі прыкладаннямі. Шкодныя прыкладання маюць выкарыстоўваць гэта для доступу да дадзеных іншых прыкладанняў. Правамернае выкарыстоўванне падразумявае выкарыстоўванне эмулятара. Выкарыстоўвайце гэтую наладу на свой страх і рызыка!</string>
+    <string name="permgrouplab_fake_package_signature">Падмена сігнатуры пакетаў</string>
+    <string name="permgroupdesc_fake_package_signature">Дазваляе падмен сігнатуры пакетаў</string>
+    <string name="permgrouprequest_fake_package_signature">Дазволіць
+        &lt;b&gt;<xliff:g id="app_name" example="Gmail">%1$s</xliff:g>&lt;/b&gt; падмяніць сігнатуру пакета?</string>
+</resources>

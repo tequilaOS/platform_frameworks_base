@@ -3,7 +3,7 @@
      Copyright (C) 2022-2023 tequilaOS
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="volume_dialog_ringer_guidance_normal">Звонки и уведомления будут звучать</string>
     <string name="reboot_to_bootloader_title">Перезагрузиться в загрузчик</string>
     <string name="reboot_to_bootloader_message">Перезагружаемся в загрузчик\u2026</string>
@@ -11,4 +11,10 @@
     <string name="reboot_to_recovery_message">Перезагружаемся в рекавери\u2026</string>
     <string name="reboot_system_title">Перезагрузить систему</string>
     <string name="reboot_system_message">Перезагружаем систему\u2026</string>
+    <string name="face_unlock_disabled_idle">Разблокировка по лицу отключена из-за бездействия</string>
+    <string name="permlab_fakePackageSignature">Подделка подписи пакета</string>
+    <string name="permdesc_fakePackageSignature">Позволяет приложению притворяться другим приложением. Вредоносные приложения могут использовать это для доступа к данным приватных приложений. Правомерное использование подразумевается использование эмулятора. Используйте эту настройку на свой страх и риск!</string>
+    <string name="permgrouplab_fake_package_signature">Подделка подписи пакета</string>
+    <string name="permgroupdesc_fake_package_signature">Позволяет подделывать подпись пакетов</string>
+    <string name="permgrouprequest_fake_package_signature">Разрешить         &lt;b&gt;<xliff:g id="app_name" example="Gmail">%1$s</xliff:g>&lt;/b&gt; подделать подпись пакета?</string>
 </resources>

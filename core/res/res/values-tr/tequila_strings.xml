@@ -3,7 +3,7 @@
      Copyright (C) 2022-2023 tequilaOS
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="volume_dialog_ringer_guidance_normal">Çağrılar ve bildirimler için zil sesi</string>
     <string name="reboot_to_bootloader_title">Önyükleyici Modunda Yeniden Başlat</string>
     <string name="reboot_to_bootloader_message">Ön yükleyici modunda yeniden başlatılıyor\u2026</string>

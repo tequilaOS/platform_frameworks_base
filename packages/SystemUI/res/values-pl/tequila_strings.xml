@@ -7,6 +7,9 @@
     <string name="status_bar_call_strength">Sygnał sieci komórkowej</string>
     <string name="bluetooth_is_off">Bluetooth jest wyłączony</string>
     <string name="tap_a_device_to_connect">Dotknij urządzenia, aby się z nim połączyć</string>
+    <string name="quick_settings_caffeine_label">Kofeina</string>
+    <string name="accessibility_quick_settings_caffeine_off">Kofeina wyłączona</string>
+    <string name="accessibility_quick_settings_caffeine_on">Kofeina włączona</string>
     <string name="quick_settings_powershare_label">Ładowanie zwrotne</string>
     <string name="quick_settings_powershare_off_powersave_label">Ładowanie zwrotne wyłączone\nOszczędzanie baterii</string>
     <string name="quick_settings_powershare_off_low_battery_label">Ładowanie zwrotne wyłączone\nNiski poziom baterii</string>
@@ -19,4 +22,16 @@
     <string name="global_action_reboot_recovery">Recovery</string>
     <string name="global_action_reboot_bootloader">Bootloader</string>
     <string name="global_action_settings">Ustawienia</string>
+    <string name="face_unlock_recognizing">Rozpoznawanie twarzy...</string>
+    <string name="usage_data">użyto dziś</string>
+    <string name="usage_data_default_suffix">Dane</string>
+    <string name="usage_wifi_default_suffix">Wi-Fi</string>
+    <string name="qs_data_switch_label">Zmień kartę do obsługi danych mobilnych</string>
+    <string name="qs_data_switch_toast_0">Nie wykryto żadnej karty SIM</string>
+    <string name="qs_data_switch_toast_1">Wykryto tylko jedną kartę SIM</string>
+    <string name="qs_data_switch_changed_1">Przełącz kartę danych na SIM 1.</string>
+    <string name="qs_data_switch_changed_2">Przełącz kartę danych na SIM 2.</string>
+    <string name="qs_data_sim_none">Brak karty SIM</string>
+    <string name="qs_data_sim_1">SIM 1</string>
+    <string name="qs_data_sim_2">SIM 2</string>
 </resources>
