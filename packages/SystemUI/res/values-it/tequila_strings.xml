@@ -7,6 +7,9 @@
     <string name="status_bar_call_strength">Intensità del segnale</string>
     <string name="bluetooth_is_off">Bluetooth disattivato</string>
     <string name="tap_a_device_to_connect">Tocca un dispositivo per connetterti</string>
+    <string name="quick_settings_caffeine_label">Caffeina</string>
+    <string name="accessibility_quick_settings_caffeine_off">Caffeina disattivata</string>
+    <string name="accessibility_quick_settings_caffeine_on">Caffeina attivata</string>
     <string name="quick_settings_powershare_label">Condivisione Batteria</string>
     <string name="quick_settings_powershare_off_powersave_label">Condivisione Batteria spenta\nRisparmio batteria</string>
     <string name="quick_settings_powershare_off_low_battery_label">Condivisione Batteria spenta\nBatteria troppo scarica</string>
@@ -19,4 +22,16 @@
     <string name="global_action_reboot_recovery">Recovery</string>
     <string name="global_action_reboot_bootloader">Bootloader</string>
     <string name="global_action_settings">Impostazioni</string>
+    <string name="face_unlock_recognizing">Riconoscimento del volto...</string>
+    <string name="usage_data">utilizzo di oggi</string>
+    <string name="usage_data_default_suffix">Dati</string>
+    <string name="usage_wifi_default_suffix">Wi-Fi</string>
+    <string name="qs_data_switch_label">Cambia SIM dati</string>
+    <string name="qs_data_switch_toast_0">Attualmente non è inserita alcuna scheda SIM</string>
+    <string name="qs_data_switch_toast_1">Attualmente è inserita una sola scheda SIM</string>
+    <string name="qs_data_switch_changed_1">Utilizza SIM 1 per i dati mobili.</string>
+    <string name="qs_data_switch_changed_2">Utilizza SIM 2 per i dati mobili.</string>
+    <string name="qs_data_sim_none">Nessuna SIM</string>
+    <string name="qs_data_sim_1">SIM 1</string>
+    <string name="qs_data_sim_2">SIM 2</string>
 </resources>

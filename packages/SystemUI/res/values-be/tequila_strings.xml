@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="status_bar_call_strength">Узровень сігналу</string>
+    <string name="bluetooth_is_off">Bluetooth выключаны</string>
+    <string name="tap_a_device_to_connect">Націсніце на ўстройства для падключэння</string>
+    <string name="quick_settings_caffeine_label">Кафеін</string>
+    <string name="accessibility_quick_settings_caffeine_off">Кафеін выкл.</string>
+    <string name="accessibility_quick_settings_caffeine_on">Кафеін вкл.</string>
+    <string name="quick_settings_powershare_label">Перадача зарада батарэі</string>
+    <string name="quick_settings_powershare_off_powersave_label">Перадача зарада батарэі выкл.\nЭнэргазберажэнне</string>
+    <string name="quick_settings_powershare_off_low_battery_label">Перадача зарада батарэі выключана\nЗарад батарэі вельмі нізкі</string>
+    <string name="quick_settings_powershare_enabled_label">Перадача зарада батарэі ўключына</string>
+    <string name="status_bar_nfc">NFC</string>
+    <string name="accessibility_status_bar_nfc">Nfc</string>
+    <string name="global_action_reboot">Перазапуск</string>
+    <string name="global_action_reboot_more">Перазапускаем\u2026</string>
+    <string name="global_action_reboot_sub">Сістэма</string>
+    <string name="global_action_reboot_recovery">Рэкавері</string>
+    <string name="global_action_reboot_bootloader">Загрузчык</string>
+    <string name="global_action_settings">Налады</string>
+    <string name="face_unlock_recognizing">Распазнаванне твару...</string>
+    <string name="usage_data">выкарыстоўвалася сягоння</string>
+    <string name="usage_data_default_suffix">Даныя</string>
+    <string name="usage_wifi_default_suffix">Wi-Fi</string>
+    <string name="qs_data_switch_label">Пераключыць сім-карту</string>
+    <string name="qs_data_switch_toast_0">Сім-карта не ўстаўлена</string>
+    <string name="qs_data_switch_toast_1">Устаўлена толькі адна сім-карта</string>
+    <string name="qs_data_switch_changed_1">Пераключыць перадачу даных на першую сім-карту.</string>
+    <string name="qs_data_switch_changed_2">Пераключыць перадачу даных на другую сім-карту.</string>
+    <string name="qs_data_sim_none">Няма сім-карт</string>
+    <string name="qs_data_sim_1">SIM 1</string>
+    <string name="qs_data_sim_2">SIM 2</string>
+</resources>

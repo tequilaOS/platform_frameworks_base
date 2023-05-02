@@ -3,7 +3,7 @@
      Copyright (C) 2022-2023 tequilaOS
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="volume_dialog_ringer_guidance_normal">Sonnerie activée pour les notifications et les appels</string>
     <string name="reboot_to_bootloader_title">Redémarrage en mode bootloader</string>
     <string name="reboot_to_bootloader_message">Redémarrage en mode Bootloader\u2026</string>
