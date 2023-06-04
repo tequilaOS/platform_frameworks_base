@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="volume_dialog_ringer_guidance_normal">สายเรียกเข้าและการแจ้งเตือนจะส่งเสียง</string>
+    <string name="reboot_to_bootloader_title">รีบูตไปยัง bootloader</string>
+    <string name="reboot_to_bootloader_message">กำลังรีบูตไปยัง bootloader\u2026</string>
+    <string name="reboot_to_recovery_title">รีบูตไปยัง Recovery</string>
+    <string name="reboot_to_recovery_message">กำลังรีบูตไปยัง recovery\u2026</string>
+    <string name="reboot_system_title">รีสตาร์ทระบบ</string>
+    <string name="reboot_system_message">กำลังรีสตาร์ทระบบ\u2026</string>
+    <string name="face_unlock_disabled_idle">การปลดล็อกด้วยใบหน้าถูกปิดใช้งานเนื่องจากไม่มีการใช้งาน</string>
+    <string name="permlab_fakePackageSignature">ปลอมลายเซ็นของแพ็คเกจ</string>
+</resources>

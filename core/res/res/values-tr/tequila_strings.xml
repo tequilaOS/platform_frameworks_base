@@ -11,4 +11,9 @@
     <string name="reboot_to_recovery_message">Kurtarma modunda başlatılıyor\u2026</string>
     <string name="reboot_system_title">Sistemi  Yeniden Başlat</string>
     <string name="reboot_system_message">Sistem yeniden başlatılıyor\u2026</string>
+    <string name="face_unlock_disabled_idle">Hareketsizlik nedeniyle yüz kilidi devre dışı bırakıldı</string>
+    <string name="permdesc_fakePackageSignature">Uygulamaya, farklı bir uygulama gibi davranma izni verir. Kötü amaçlı uygulamalar, özel uygulama verilerine erişmek için bunu kullanabilir. Meşru kullanımlar, öykündüğü şeymiş gibi davranan bir öykünücüyü içerir. Bu izni yalnızca dikkatle verin!</string>
+    <string name="permgrouplab_fake_package_signature">Sahte paket imzası</string>
+    <string name="permgroupdesc_fake_package_signature">paket imzasını taklit etmeye izin ver</string>
+    <string name="permgrouprequest_fake_package_signature">&lt;b&gt;<xliff:g id="app_name" example="Gmail">%1$s</xliff:g>&lt;/b&gt; uygulamasının imza taklit etmesine izin verilsin mi?</string>
 </resources>
