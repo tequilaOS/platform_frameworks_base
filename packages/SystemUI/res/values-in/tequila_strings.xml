@@ -23,4 +23,15 @@
     <string name="global_action_reboot_bootloader">Bootloader</string>
     <string name="global_action_settings">Setelan</string>
     <string name="face_unlock_recognizing">Mengenali wajah...</string>
+    <string name="usage_data">digunakan hari ini</string>
+    <string name="usage_data_default_suffix">Data</string>
+    <string name="usage_wifi_default_suffix">Wi-Fi</string>
+    <string name="qs_data_switch_label">Ubah kartu data</string>
+    <string name="qs_data_switch_toast_0">Tidak ada kartu SIM yang terpasang saat ini</string>
+    <string name="qs_data_switch_toast_1">Hanya satu kartu SIM yang terpasang saat ini</string>
+    <string name="qs_data_switch_changed_1">Ubah kartu data ke SIM 1.</string>
+    <string name="qs_data_switch_changed_2">Ubah kartu data ke SIM 2.</string>
+    <string name="qs_data_sim_none">Tidak ada kartu SIM</string>
+    <string name="qs_data_sim_1">SIM 1</string>
+    <string name="qs_data_sim_2">SIM 2</string>
 </resources>

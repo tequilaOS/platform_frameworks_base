@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2022-2023 tequilaOS
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="status_bar_call_strength">ความแรงของสัญญาน</string>
+    <string name="bluetooth_is_off">บลูทูธปิดอยู่</string>
+    <string name="tap_a_device_to_connect">แตะอุปกรณ์เพื่อเชื่อมต่อ</string>
+    <string name="quick_settings_caffeine_label">โหมด Caffeine</string>
+    <string name="accessibility_quick_settings_caffeine_off">โหมด Caffeine ปิดอยู่</string>
+    <string name="accessibility_quick_settings_caffeine_on">โหมด Caffeine เปิดอยู่</string>
+    <string name="quick_settings_powershare_label">การแชร์แบตเตอรี่</string>
+    <string name="quick_settings_powershare_off_powersave_label">ปิดการแชร์แบตเตอรี่\nโหมดประหยัดพลังงาน</string>
+    <string name="quick_settings_powershare_off_low_battery_label">ปิดการแชร์แบตเตอรี่\nแบตเหลือน้อยแล้ว</string>
+    <string name="quick_settings_powershare_enabled_label">การแชร์แบตเตอรี่เปิดอยู่</string>
+    <string name="status_bar_nfc">NFC</string>
+    <string name="accessibility_status_bar_nfc">Nfc</string>
+    <string name="global_action_reboot">รีสตาร์ท</string>
+    <string name="global_action_reboot_more">รีสตาร์ท\u2026</string>
+    <string name="global_action_reboot_sub">ระบบ</string>
+    <string name="global_action_reboot_recovery">Recovery</string>
+    <string name="global_action_reboot_bootloader">Bootloader</string>
+    <string name="global_action_settings">การตั้งค่า</string>
+    <string name="face_unlock_recognizing">กำลังค้นหาใบหน้า</string>
+    <string name="usage_data">อินเตอร์เน็ตที่ใช้ไปแล้วในวันนี้</string>
+    <string name="usage_data_default_suffix">ข้อมูล</string>
+    <string name="usage_wifi_default_suffix">ไวไฟ</string>
+    <string name="qs_data_switch_label">สลับซิมอินเตอร์เน็ตมือถือ</string>
+    <string name="qs_data_switch_toast_0">ขณะนี้ไม่ได้ใส่ซิมการ์ด</string>
+    <string name="qs_data_switch_toast_1">ขณะนี้ใส่เพียงซิมการ์ดเพียงเดียว</string>
+    <string name="qs_data_switch_changed_1">สลับซิมอินเตอร์เน็ตไปซิม 1</string>
+    <string name="qs_data_switch_changed_2">สลับซิมอินเตอร์เน็ตไปซิม 2</string>
+    <string name="qs_data_sim_none">ไม่มีซิมการ์ด</string>
+    <string name="qs_data_sim_1">ซิม 1</string>
+    <string name="qs_data_sim_2">ซิม 2</string>
+</resources>

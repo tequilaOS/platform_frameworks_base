@@ -23,4 +23,15 @@
     <string name="global_action_reboot_bootloader">Bootloader</string>
     <string name="global_action_settings">Einstellungen</string>
     <string name="face_unlock_recognizing">Gesicht wird erkannt...</string>
+    <string name="usage_data">Heute verbraucht</string>
+    <string name="usage_data_default_suffix">Mobile Daten</string>
+    <string name="usage_wifi_default_suffix">WLAN</string>
+    <string name="qs_data_switch_label">Daten SIM-Karte wechseln</string>
+    <string name="qs_data_switch_toast_0">Keine SIM-Karte ist eingelegt</string>
+    <string name="qs_data_switch_toast_1">Derzeit ist nur eine SIM-Karte eingelegt</string>
+    <string name="qs_data_switch_changed_1">Daten SIM-Karte zu SIM 1 wechseln.</string>
+    <string name="qs_data_switch_changed_2">Daten SIM-Karte zu SIM 2 wechseln.</string>
+    <string name="qs_data_sim_none">Keine SIM-Karte</string>
+    <string name="qs_data_sim_1">SIM 1</string>
+    <string name="qs_data_sim_2">SIM 2</string>
 </resources>
