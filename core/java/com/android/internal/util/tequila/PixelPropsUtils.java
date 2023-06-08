@@ -17,8 +17,14 @@
 
 package com.android.internal.util.tequila;
 
+import android.app.ActivityTaskManager;
 import android.app.Application;
+import android.app.TaskStackListener;
+import android.content.Context;
+import android.content.ComponentName;
+import android.os.Binder;
 import android.os.Build;
+import android.os.Process;
 import android.os.SystemProperties;
 import android.util.Log;
 
@@ -103,6 +109,9 @@ public class PixelPropsUtils {
     private static volatile boolean sIsGms = false;
     private static volatile boolean sIsFinsky = false;
 
+    private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY = ComponentName.unflattenFromString(
+        "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
+
     static {
         propsToKeep = new HashMap<>();
         propsToChange = new HashMap<>();
@@ -173,6 +182,26 @@ public class PixelPropsUtils {
                 final String processName = Application.getProcessName();
                 if (processName.equals("com.google.android.gms.unstable")) {
                     sIsGms = true;
+
+                    final boolean was = isGmsAddAccountActivityOnTop();
+                    final TaskStackListener taskStackListener = new TaskStackListener() {
+                        @Override
+                        public void onTaskStackChanged() {
+                            final boolean is = isGmsAddAccountActivityOnTop();
+                            if (is ^ was) {
+                                if (DEBUG) Log.d(TAG, "GmsAddAccountActivityOnTop is:" + is + " was:" + was +
+                                        ", killing myself!"); // process will restart automatically later
+                                Process.killProcess(Process.myPid());
+                            }
+                        }
+                    };
+                    try {
+                        ActivityTaskManager.getService().registerTaskStackListener(taskStackListener);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to register task stack listener!", e);
+                    }
+                    if (was) return;
+
                     spoofBuildGms();
                 }
                 return;
@@ -248,5 +277,31 @@ public class PixelPropsUtils {
             Log.i(TAG, "Blocked key attestation sIsGms=" + sIsGms + " sIsFinsky=" + sIsFinsky);
             throw new UnsupportedOperationException();
         }
+    }
+
+    private static boolean isGmsAddAccountActivityOnTop() {
+        try {
+            final ActivityTaskManager.RootTaskInfo focusedTask =
+                    ActivityTaskManager.getService().getFocusedRootTaskInfo();
+            return focusedTask != null && focusedTask.topActivity != null
+                    && focusedTask.topActivity.equals(GMS_ADD_ACCOUNT_ACTIVITY);
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to get top activity!", e);
+        }
+        return false;
+    }
+
+    public static boolean shouldBypassTaskPermission(Context context) {
+        // GMS doesn't have MANAGE_ACTIVITY_TASKS permission
+        final int callingUid = Binder.getCallingUid();
+        final int gmsUid;
+        try {
+            gmsUid = context.getPackageManager().getApplicationInfo("com.google.android.gms", 0).uid;
+            if (DEBUG) Log.d(TAG, "shouldBypassTaskPermission: gmsUid:" + gmsUid + " callingUid:" + callingUid);
+        } catch (Exception e) {
+            Log.e(TAG, "shouldBypassTaskPermission: unable to get gms uid", e);
+            return false;
+        }
+        return gmsUid == callingUid;
     }
 }
