@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Binder;
 import android.os.Process;
+import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -41,11 +42,14 @@ public class PropImitationHooks {
     private static final String TAG = "PropImitationHooks";
     private static final boolean DEBUG = false;
 
-    private static final String[] sCertifiedProps =
-            Resources.getSystem().getStringArray(R.array.config_certifiedBuildProperties);
+    private static final String[] sCertifiedProps = {
+        "marlin", // Build.DEVICE
+        "marlin", // Build.PRODUCT
+        "Pixel XL", // Build.MODEL
+        "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys" // Build.FINGERPRINT
+    };
 
-    private static final String sStockFp =
-            Resources.getSystem().getString(R.string.config_stockFingerprint);
+    private static final String sStockFp = SystemProperties.get("ro.build.fingerprint");
 
     private static final String sNetflixModel =
             Resources.getSystem().getString(R.string.config_netflixSpoofModel);
