@@ -16,6 +16,24 @@
       "message": "replace tabs with spaces",
       "revId": "233c15a263cd77cff1d205439c93647118d3bc83",
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8c070e0_1632dc41",
+        "filename": "packages/SystemUI/src/com/android/systemui/statusbar/connectivity/MobileSignalController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T09:48:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9b33ee4_68f0fdee",
+      "revId": "233c15a263cd77cff1d205439c93647118d3bc83",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     }
   ]
 }
