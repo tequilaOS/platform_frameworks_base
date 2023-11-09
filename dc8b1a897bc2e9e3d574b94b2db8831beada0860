@@ -18,6 +18,24 @@
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "870c14f6_b0ff6ea2",
+        "filename": "core/res/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be6646bc_8168db6c",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e79faa4_ffcb9c09",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-11-09T09:28:59Z",
       "side": 1,
       "message": "same here",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f497910b_c094ab98",
+        "filename": "core/res/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e79faa4_ffcb9c09",
       "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     },
@@ -52,6 +88,24 @@
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "767d526f_2623f9f3",
+        "filename": "core/res/res/values/tequila_symbols.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51722676_c81fcf9e",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fc59bfa_fc3a65ee",
@@ -65,6 +119,24 @@
       "writtenOn": "2023-11-09T09:28:59Z",
       "side": 1,
       "message": "remove extra empty line",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5e0cc5b_17971989",
+        "filename": "packages/SystemUI/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fc59bfa_fc3a65ee",
       "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     },
@@ -86,6 +158,24 @@
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6830ff44_bac69ccf",
+        "filename": "packages/SystemUI/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c389f891_e3beb8cb",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8be01b1e_4bbabb93",
@@ -103,6 +193,24 @@
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "602e2f1e_81f7e961",
+        "filename": "packages/SystemUI/src/com/android/systemui/globalactions/GlobalActionsDialogLite.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8be01b1e_4bbabb93",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e074c29b_7f1d0135",
@@ -116,6 +224,24 @@
       "writtenOn": "2023-11-09T09:28:59Z",
       "side": 1,
       "message": "insert empty newline at the end of file",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92831051_2cb0593f",
+        "filename": "packages/SystemUI/src/com/android/systemui/globalactions/GlobalActionsPowerDialog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000006
+      },
+      "writtenOn": "2023-11-09T10:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e074c29b_7f1d0135",
       "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
       "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
     }
