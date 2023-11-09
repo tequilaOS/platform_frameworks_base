@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be6646bc_8168db6c",
+        "filename": "core/res/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "remove extra empty line",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e79faa4_ffcb9c09",
+        "filename": "core/res/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51722676_c81fcf9e",
+        "filename": "core/res/res/values/tequila_symbols.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "remove extra empty line",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fc59bfa_fc3a65ee",
+        "filename": "packages/SystemUI/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "remove extra empty line",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c389f891_e3beb8cb",
+        "filename": "packages/SystemUI/res/values/tequila_strings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8be01b1e_4bbabb93",
+        "filename": "packages/SystemUI/src/com/android/systemui/globalactions/GlobalActionsDialogLite.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "remove extra empty line",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e074c29b_7f1d0135",
+        "filename": "packages/SystemUI/src/com/android/systemui/globalactions/GlobalActionsPowerDialog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:28:59Z",
+      "side": 1,
+      "message": "insert empty newline at the end of file",
+      "revId": "dc8b1a897bc2e9e3d574b94b2db8831beada0860",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    }
+  ]
+}
