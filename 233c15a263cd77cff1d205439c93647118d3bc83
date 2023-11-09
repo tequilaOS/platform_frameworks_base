@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9b33ee4_68f0fdee",
+        "filename": "packages/SystemUI/src/com/android/systemui/statusbar/connectivity/MobileSignalController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-11-09T09:25:17Z",
+      "side": 1,
+      "message": "replace tabs with spaces",
+      "revId": "233c15a263cd77cff1d205439c93647118d3bc83",
+      "serverId": "6e240c91-23cb-42f0-b60c-7c3c525b6cb9"
+    }
+  ]
+}
