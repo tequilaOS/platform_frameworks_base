@@ -43,10 +43,10 @@ public class PropImitationHooks {
     private static final boolean DEBUG = false;
 
     private static final String[] sCertifiedProps = {
-        "ASUS_X00HD_4", // Build.DEVICE
-        "WW_Phone", // Build.PRODUCT
-        "ASUS_X00HD", // Build.MODEL
-        "asus/WW_Phone/ASUS_X00HD_4:7.1.1/NMF26F/14.2016.1801.372-20180119:user/release-keys" // Build.FINGERPRINT
+        "tiare", // Build.DEVICE
+        "tiare", // Build.PRODUCT
+        "Redmi Go", // Build.MODEL
+        "Xiaomi/tiare_in/tiare:8.1.0/OPM1.171019.026/V10.2.19.0.OCLINXM:user/release-keys" // Build.FINGERPRINT
     };
 
     private static final String sStockFp = SystemProperties.get("ro.build.fingerprint");
