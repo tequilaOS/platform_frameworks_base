@@ -43,10 +43,10 @@ public class PropImitationHooks {
     private static final boolean DEBUG = false;
 
     private static final String[] sCertifiedProps = {
-        "ASUS_X00HD_4", // Build.DEVICE
-        "WW_Phone", // Build.PRODUCT
-        "ASUS_X00HD", // Build.MODEL
-        "asus/WW_Phone/ASUS_X00HD_4:7.1.1/NMF26F/14.2016.1801.372-20180119:user/release-keys" // Build.FINGERPRINT
+        "bullhead", // Build.DEVICE
+        "bullhead", // Build.PRODUCT
+        "Nexus 5X", // Build.MODEL
+        "google/bullhead/bullhead:8.0.0/OPR6.170623.013/4283548:user/release-keys" // Build.FINGERPRINT
     };
 
     private static final String sStockFp = SystemProperties.get("ro.build.fingerprint");
