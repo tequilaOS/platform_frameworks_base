@@ -22,6 +22,7 @@ import android.os.Looper;
 
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.systemui.dump.DumpManager;
+import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.media.dialog.MediaOutputDialogFactory;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.VolumeDialog;
@@ -63,7 +64,8 @@ public interface VolumeModule {
             CsdWarningDialog.Factory csdFactory,
             DevicePostureController devicePostureController,
             DumpManager dumpManager,
-            TunerService tunerService) {
+            TunerService tunerService,
+            FeatureFlags featureFlags) {
         VolumeDialogImpl impl = new VolumeDialogImpl(
                 context,
                 volumeDialogController,
@@ -74,11 +76,13 @@ public interface VolumeModule {
                 volumePanelFactory,
                 activityStarter,
                 interactionJankMonitor,
+                true, /* should listen for jank */
                 csdFactory,
                 devicePostureController,
                 Looper.getMainLooper(),
                 dumpManager,
-                tunerService);
+                tunerService,
+                featureFlags);
         impl.setStreamImportant(AudioManager.STREAM_SYSTEM, false);
         impl.setAutomute(true);
         impl.setSilentMode(false);

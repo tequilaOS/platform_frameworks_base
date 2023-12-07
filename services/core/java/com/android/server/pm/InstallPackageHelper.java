@@ -484,11 +484,19 @@ final class InstallPackageHelper {
             pkgSetting.setLoadingProgress(1f);
         }
 
-        // TODO: passes the package name as an argument in a message to the handler for V+
-        //  so we don't need to rely on creating lambda objects so frequently.
-        if (UpdateOwnershipHelper.hasValidOwnershipDenyList(pkgSetting)) {
-            mPm.mHandler.post(() -> handleUpdateOwnerDenyList(pkgSetting));
+        ArraySet<String> listItems = mUpdateOwnershipHelper.readUpdateOwnerDenyList(pkgSetting);
+        if (listItems != null && !listItems.isEmpty()) {
+            mUpdateOwnershipHelper.addToUpdateOwnerDenyList(pkgSetting.getPackageName(), listItems);
+            for (String unownedPackage : listItems) {
+                PackageSetting unownedSetting = mPm.mSettings.getPackageLPr(unownedPackage);
+                SystemConfig config = SystemConfig.getInstance();
+                if (unownedSetting != null
+                        && config.getSystemAppUpdateOwnerPackageName(unownedPackage) == null) {
+                    unownedSetting.setUpdateOwnerPackage(null);
+                }
+            }
         }
+
         return pkg;
     }
 

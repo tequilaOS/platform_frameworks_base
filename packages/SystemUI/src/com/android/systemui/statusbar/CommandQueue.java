@@ -73,7 +73,6 @@ import com.android.systemui.settings.DisplayTracker;
 import com.android.systemui.statusbar.CommandQueue.Callbacks;
 import com.android.systemui.statusbar.commandline.CommandRegistry;
 import com.android.systemui.statusbar.policy.CallbackController;
-import com.android.systemui.tracing.ProtoTracer;
 
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -170,7 +169,10 @@ public class CommandQueue extends IStatusBar.Stub implements
     private static final int MSG_SHOW_MEDIA_OUTPUT_SWITCHER = 72 << MSG_SHIFT;
     private static final int MSG_TOGGLE_TASKBAR = 73 << MSG_SHIFT;
     private static final int MSG_TOGGLE_CAMERA_FLASH = 74 << MSG_SHIFT;
-
+    private static final int MSG_SETTING_CHANGED = 75 << MSG_SHIFT;
+    private static final int MSG_LOCK_TASK_MODE_CHANGED = 76 << MSG_SHIFT;
+    private static final int MSG_CONFIRM_IMMERSIVE_PROMPT = 77 << MSG_SHIFT;
+    private static final int MSG_IMMERSIVE_CHANGED = 78 << MSG_SHIFT;
     public static final int FLAG_EXCLUDE_NONE = 0;
     public static final int FLAG_EXCLUDE_SEARCH_PANEL = 1 << 0;
     public static final int FLAG_EXCLUDE_RECENTS_PANEL = 1 << 1;
@@ -191,7 +193,6 @@ public class CommandQueue extends IStatusBar.Stub implements
      */
     private int mLastUpdatedImeDisplayId = INVALID_DISPLAY;
     private final DisplayTracker mDisplayTracker;
-    private ProtoTracer mProtoTracer;
     private final @Nullable CommandRegistry mRegistry;
     private final @Nullable DumpHandler mDumpHandler;
 
@@ -506,22 +507,30 @@ public class CommandQueue extends IStatusBar.Stub implements
          * @see IStatusBar#toggleCameraFlash
          */
         default void toggleCameraFlash() {}
+
+        /*
+         * @see IStatusBar#confirmImmersivePrompt
+         */
+        default void confirmImmersivePrompt() {}
+
+        /**
+         * @see IStatusBar#immersiveModeChanged
+         */
+        default void immersiveModeChanged(int rootDisplayAreaId, boolean isImmersiveMode) {}
     }
 
     @VisibleForTesting
     public CommandQueue(Context context, DisplayTracker displayTracker) {
-        this(context, displayTracker, null, null, null);
+        this(context, displayTracker, null, null);
     }
 
     public CommandQueue(
             Context context,
             DisplayTracker displayTracker,
-            ProtoTracer protoTracer,
             CommandRegistry registry,
             DumpHandler dumpHandler
     ) {
         mDisplayTracker = displayTracker;
-        mProtoTracer = protoTracer;
         mRegistry = registry;
         mDumpHandler = dumpHandler;
         mDisplayTracker.addDisplayChangeCallback(new DisplayTracker.Callback() {
@@ -789,6 +798,23 @@ public class CommandQueue extends IStatusBar.Stub implements
         synchronized (mLock) {
             mHandler.obtainMessage(MSG_SHOW_SCREEN_PIN_REQUEST, taskId, 0, null)
                     .sendToTarget();
+        }
+    }
+
+    @Override
+    public void confirmImmersivePrompt() {
+        synchronized (mLock) {
+            mHandler.obtainMessage(MSG_CONFIRM_IMMERSIVE_PROMPT).sendToTarget();
+        }
+    }
+
+    @Override
+    public void immersiveModeChanged(int rootDisplayAreaId, boolean isImmersiveMode) {
+        synchronized (mLock) {
+            final SomeArgs args = SomeArgs.obtain();
+            args.argi1 = rootDisplayAreaId;
+            args.argi2 = isImmersiveMode ? 1 : 0;
+            mHandler.obtainMessage(MSG_IMMERSIVE_CHANGED, args).sendToTarget();
         }
     }
 
@@ -1166,9 +1192,6 @@ public class CommandQueue extends IStatusBar.Stub implements
     @Override
     public void startTracing() {
         synchronized (mLock) {
-            if (mProtoTracer != null) {
-                mProtoTracer.start();
-            }
             mHandler.obtainMessage(MSG_TRACING_STATE_CHANGED, true).sendToTarget();
         }
     }
@@ -1176,9 +1199,6 @@ public class CommandQueue extends IStatusBar.Stub implements
     @Override
     public void stopTracing() {
         synchronized (mLock) {
-            if (mProtoTracer != null) {
-                mProtoTracer.stop();
-            }
             mHandler.obtainMessage(MSG_TRACING_STATE_CHANGED, false).sendToTarget();
         }
     }
@@ -1837,6 +1857,19 @@ public class CommandQueue extends IStatusBar.Stub implements
                 case MSG_TOGGLE_CAMERA_FLASH:
                     for (int i = 0; i < mCallbacks.size(); i++) {
                         mCallbacks.get(i).toggleCameraFlash();
+                    }
+                    break;
+                case MSG_CONFIRM_IMMERSIVE_PROMPT:
+                    for (int i = 0; i < mCallbacks.size(); i++) {
+                        mCallbacks.get(i).confirmImmersivePrompt();
+                    }
+                    break;
+                case MSG_IMMERSIVE_CHANGED:
+                    args = (SomeArgs) msg.obj;
+                    int rootDisplayAreaId = args.argi1;
+                    boolean isImmersiveMode = args.argi2 != 0;
+                    for (int i = 0; i < mCallbacks.size(); i++) {
+                        mCallbacks.get(i).immersiveModeChanged(rootDisplayAreaId, isImmersiveMode);
                     }
                     break;
             }

@@ -133,7 +133,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
                 }
                 mMainExecutor.execute(() -> {
                     mRequestedRemotes.remove(transition);
-                    finishCallback.onTransitionFinished(wct, null /* wctCB */);
+                    finishCallback.onTransitionFinished(wct);
                 });
             }
         };
@@ -157,8 +157,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
             startTransaction.apply();
             unhandleDeath(remote.asBinder(), finishCallback);
             mRequestedRemotes.remove(transition);
-            mMainExecutor.execute(
-                    () -> finishCallback.onTransitionFinished(null /* wct */, null /* wctCB */));
+            mMainExecutor.execute(() -> finishCallback.onTransitionFinished(null /* wct */));
         }
         return true;
     }
@@ -214,7 +213,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
                                 + "that the mergeTarget's RemoteTransition impl erroneously "
                                 + "accepted/ran the merge request after finishing the mergeTarget");
                     }
-                    finishCallback.onTransitionFinished(wct, null /* wctCB */);
+                    finishCallback.onTransitionFinished(wct);
                 });
             }
         };
@@ -320,8 +319,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
                     }
                 }
                 for (int i = mPendingFinishCallbacks.size() - 1; i >= 0; --i) {
-                    mPendingFinishCallbacks.get(i).onTransitionFinished(
-                            null /* wct */, null /* wctCB */);
+                    mPendingFinishCallbacks.get(i).onTransitionFinished(null /* wct */);
                 }
                 mPendingFinishCallbacks.clear();
             });

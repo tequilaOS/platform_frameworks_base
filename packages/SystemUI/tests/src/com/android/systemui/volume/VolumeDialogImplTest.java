@@ -16,15 +16,22 @@
 
 package com.android.systemui.volume;
 
+import static android.media.AudioManager.RINGER_MODE_NORMAL;
+import static android.media.AudioManager.RINGER_MODE_SILENT;
+import static android.media.AudioManager.RINGER_MODE_VIBRATE;
+
+import static com.android.systemui.flags.Flags.ONE_WAY_HAPTICS_API_MIGRATION;
 import static com.android.systemui.volume.Events.DISMISS_REASON_UNKNOWN;
 import static com.android.systemui.volume.Events.SHOW_REASON_UNKNOWN;
 import static com.android.systemui.volume.VolumeDialogControllerImpl.STREAMS;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertTrue;
 
+import static org.junit.Assume.assumeNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -37,6 +44,7 @@ import android.media.AudioManager;
 import android.os.SystemClock;
 import android.testing.AndroidTestingRunner;
 import android.testing.TestableLooper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.InputDevice;
 import android.view.MotionEvent;
@@ -50,7 +58,9 @@ import com.android.internal.jank.InteractionJankMonitor;
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
 import com.android.systemui.SysuiTestCase;
+import com.android.systemui.animation.AnimatorTestRule;
 import com.android.systemui.dump.DumpManager;
+import com.android.systemui.flags.FakeFeatureFlags;
 import com.android.systemui.media.dialog.MediaOutputDialogFactory;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.VolumeDialogController;
@@ -64,6 +74,7 @@ import com.android.systemui.tuner.TunerService;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -75,18 +86,21 @@ import java.util.function.Predicate;
 
 @SmallTest
 @RunWith(AndroidTestingRunner.class)
-@TestableLooper.RunWithLooper
+@TestableLooper.RunWithLooper(setAsMainLooper = true)
 public class VolumeDialogImplTest extends SysuiTestCase {
-
     VolumeDialogImpl mDialog;
     View mActiveRinger;
     View mDrawerContainer;
     View mDrawerVibrate;
     View mDrawerMute;
     View mDrawerNormal;
+    CaptionsToggleImageButton mODICaptionsIcon;
+
     private TestableLooper mTestableLooper;
     private ConfigurationController mConfigurationController;
     private int mOriginalOrientation;
+
+    private static final String TAG = "VolumeDialogImplTest";
 
     @Mock
     VolumeDialogController mVolumeDialogController;
@@ -120,6 +134,12 @@ public class VolumeDialogImplTest extends SysuiTestCase {
         }
     };
 
+    private FakeFeatureFlags mFeatureFlags;
+    private int mLongestHideShowAnimationDuration = 250;
+
+    @Rule
+    public final AnimatorTestRule mAnimatorTestRule = new AnimatorTestRule();
+
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -127,13 +147,23 @@ public class VolumeDialogImplTest extends SysuiTestCase {
         getContext().addMockSystemService(KeyguardManager.class, mKeyguard);
 
         mTestableLooper = TestableLooper.get(this);
+        allowTestableLooperAsMainThread();
 
         when(mPostureController.getDevicePosture())
                 .thenReturn(DevicePostureController.DEVICE_POSTURE_CLOSED);
 
+        int hideDialogDuration = mContext.getResources()
+                .getInteger(R.integer.config_dialogHideAnimationDurationMs);
+        int showDialogDuration = mContext.getResources()
+                .getInteger(R.integer.config_dialogShowAnimationDurationMs);
+
+        mLongestHideShowAnimationDuration = Math.max(hideDialogDuration, showDialogDuration);
+
         mOriginalOrientation = mContext.getResources().getConfiguration().orientation;
 
         mConfigurationController = new FakeConfigurationController();
+
+        mFeatureFlags = new FakeFeatureFlags();
 
         mDialog = new VolumeDialogImpl(
                 getContext(),
@@ -145,11 +175,13 @@ public class VolumeDialogImplTest extends SysuiTestCase {
                 mVolumePanelFactory,
                 mActivityStarter,
                 mInteractionJankMonitor,
+                false,
                 mCsdWarningDialogFactory,
                 mPostureController,
                 mTestableLooper.getLooper(),
                 mDumpManager,
-                mTunerService);
+                mTunerService,
+                mFeatureFlags);
         mDialog.init(0, null);
         State state = createShellState();
         mDialog.onStateChangedH(state);
@@ -160,6 +192,7 @@ public class VolumeDialogImplTest extends SysuiTestCase {
         mDrawerVibrate = mDrawerContainer.findViewById(R.id.volume_drawer_vibrate);
         mDrawerMute = mDrawerContainer.findViewById(R.id.volume_drawer_mute);
         mDrawerNormal = mDrawerContainer.findViewById(R.id.volume_drawer_normal);
+        mODICaptionsIcon = mDialog.getDialogView().findViewById(R.id.odi_captions_icon);
 
         Prefs.putInt(mContext,
                 Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT,
@@ -214,7 +247,6 @@ public class VolumeDialogImplTest extends SysuiTestCase {
                 | AccessibilityManager.FLAG_CONTENT_TEXT);
     }
 
-
     @Test
     public void testComputeTimeout_withHovering() {
         Mockito.reset(mAccessibilityMgr);
@@ -257,6 +289,7 @@ public class VolumeDialogImplTest extends SysuiTestCase {
 
     @Test
     public void testVibrateOnRingerChangedToVibrate() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, false);
         final State initialSilentState = new State();
         initialSilentState.ringerModeInternal = AudioManager.RINGER_MODE_SILENT;
 
@@ -277,7 +310,30 @@ public class VolumeDialogImplTest extends SysuiTestCase {
     }
 
     @Test
+    public void testControllerDoesNotVibrateOnRingerChangedToVibrate_OnewayAPI_On() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, true);
+        final State initialSilentState = new State();
+        initialSilentState.ringerModeInternal = AudioManager.RINGER_MODE_SILENT;
+
+        final State vibrateState = new State();
+        vibrateState.ringerModeInternal = AudioManager.RINGER_MODE_VIBRATE;
+
+        // change ringer to silent
+        mDialog.onStateChangedH(initialSilentState);
+
+        // expected: shouldn't call vibrate yet
+        verify(mVolumeDialogController, never()).vibrate(any());
+
+        // changed ringer to vibrate
+        mDialog.onStateChangedH(vibrateState);
+
+        // expected: vibrate method of controller is not used
+        verify(mVolumeDialogController, never()).vibrate(any());
+    }
+
+    @Test
     public void testNoVibrateOnRingerInitialization() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, false);
         final State initialUnsetState = new State();
         initialUnsetState.ringerModeInternal = -1;
 
@@ -295,7 +351,27 @@ public class VolumeDialogImplTest extends SysuiTestCase {
     }
 
     @Test
+    public void testControllerDoesNotVibrateOnRingerInitialization_OnewayAPI_On() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, true);
+        final State initialUnsetState = new State();
+        initialUnsetState.ringerModeInternal = -1;
+
+        // ringer not initialized yet:
+        mDialog.onStateChangedH(initialUnsetState);
+
+        final State vibrateState = new State();
+        vibrateState.ringerModeInternal = AudioManager.RINGER_MODE_VIBRATE;
+
+        // changed ringer to vibrate
+        mDialog.onStateChangedH(vibrateState);
+
+        // shouldn't call vibrate on the controller either
+        verify(mVolumeDialogController, never()).vibrate(any());
+    }
+
+    @Test
     public void testSelectVibrateFromDrawer() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, false);
         final State initialUnsetState = new State();
         initialUnsetState.ringerModeInternal = AudioManager.RINGER_MODE_NORMAL;
         mDialog.onStateChangedH(initialUnsetState);
@@ -309,7 +385,23 @@ public class VolumeDialogImplTest extends SysuiTestCase {
     }
 
     @Test
+    public void testSelectVibrateFromDrawer_OnewayAPI_On() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, true);
+        final State initialUnsetState = new State();
+        initialUnsetState.ringerModeInternal = RINGER_MODE_NORMAL;
+        mDialog.onStateChangedH(initialUnsetState);
+
+        mActiveRinger.performClick();
+        mDrawerVibrate.performClick();
+
+        // Make sure we've actually changed the ringer mode.
+        verify(mVolumeDialogController, times(1)).setRingerMode(
+                AudioManager.RINGER_MODE_VIBRATE, false);
+    }
+
+    @Test
     public void testSelectMuteFromDrawer() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, false);
         final State initialUnsetState = new State();
         initialUnsetState.ringerModeInternal = AudioManager.RINGER_MODE_NORMAL;
         mDialog.onStateChangedH(initialUnsetState);
@@ -323,7 +415,23 @@ public class VolumeDialogImplTest extends SysuiTestCase {
     }
 
     @Test
+    public void testSelectMuteFromDrawer_OnewayAPI_On() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, true);
+        final State initialUnsetState = new State();
+        initialUnsetState.ringerModeInternal = RINGER_MODE_NORMAL;
+        mDialog.onStateChangedH(initialUnsetState);
+
+        mActiveRinger.performClick();
+        mDrawerMute.performClick();
+
+        // Make sure we've actually changed the ringer mode.
+        verify(mVolumeDialogController, times(1)).setRingerMode(
+                AudioManager.RINGER_MODE_SILENT, false);
+    }
+
+    @Test
     public void testSelectNormalFromDrawer() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, false);
         final State initialUnsetState = new State();
         initialUnsetState.ringerModeInternal = AudioManager.RINGER_MODE_VIBRATE;
         mDialog.onStateChangedH(initialUnsetState);
@@ -334,6 +442,21 @@ public class VolumeDialogImplTest extends SysuiTestCase {
         // Make sure we've actually changed the ringer mode.
         verify(mVolumeDialogController, times(1)).setRingerMode(
                 AudioManager.RINGER_MODE_NORMAL, false);
+    }
+
+    @Test
+    public void testSelectNormalFromDrawer_OnewayAPI_On() {
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, true);
+        final State initialUnsetState = new State();
+        initialUnsetState.ringerModeInternal = AudioManager.RINGER_MODE_VIBRATE;
+        mDialog.onStateChangedH(initialUnsetState);
+
+        mActiveRinger.performClick();
+        mDrawerNormal.performClick();
+
+        // Make sure we've actually changed the ringer mode.
+        verify(mVolumeDialogController, times(1)).setRingerMode(
+                RINGER_MODE_NORMAL, false);
     }
 
     /**
@@ -368,113 +491,44 @@ public class VolumeDialogImplTest extends SysuiTestCase {
 
     @Test
     public void ifPortraitHalfOpen_drawVerticallyTop() {
-        DevicePostureController devicePostureController = mock(DevicePostureController.class);
-        when(devicePostureController.getDevicePosture())
-                .thenReturn(DevicePostureController.DEVICE_POSTURE_CLOSED);
-
-        VolumeDialogImpl dialog = new VolumeDialogImpl(
-                getContext(),
-                mVolumeDialogController,
-                mAccessibilityMgr,
-                mDeviceProvisionedController,
-                mConfigurationController,
-                mMediaOutputDialogFactory,
-                mVolumePanelFactory,
-                mActivityStarter,
-                mInteractionJankMonitor,
-                mCsdWarningDialogFactory,
-                devicePostureController,
-                mTestableLooper.getLooper(),
-                mDumpManager,
-                mTunerService
-        );
-        dialog.init(0 , null);
-
-        verify(devicePostureController).addCallback(any());
-        dialog.onPostureChanged(DevicePostureController.DEVICE_POSTURE_HALF_OPENED);
+        mDialog.onPostureChanged(DevicePostureController.DEVICE_POSTURE_HALF_OPENED);
         mTestableLooper.processAllMessages(); // let dismiss() finish
 
         setOrientation(Configuration.ORIENTATION_PORTRAIT);
 
         // Call show() to trigger layout updates before verifying position
-        dialog.show(SHOW_REASON_UNKNOWN);
+        mDialog.show(SHOW_REASON_UNKNOWN);
         mTestableLooper.processAllMessages(); // let show() finish before assessing its side-effect
 
-        int gravity = dialog.getWindowGravity();
+        int gravity = mDialog.getWindowGravity();
         assertEquals(Gravity.TOP, gravity & Gravity.VERTICAL_GRAVITY_MASK);
     }
 
     @Test
     public void ifPortraitAndOpen_drawCenterVertically() {
-        DevicePostureController devicePostureController = mock(DevicePostureController.class);
-        when(devicePostureController.getDevicePosture())
-                .thenReturn(DevicePostureController.DEVICE_POSTURE_CLOSED);
-
-        VolumeDialogImpl dialog = new VolumeDialogImpl(
-                getContext(),
-                mVolumeDialogController,
-                mAccessibilityMgr,
-                mDeviceProvisionedController,
-                mConfigurationController,
-                mMediaOutputDialogFactory,
-                mVolumePanelFactory,
-                mActivityStarter,
-                mInteractionJankMonitor,
-                mCsdWarningDialogFactory,
-                devicePostureController,
-                mTestableLooper.getLooper(),
-                mDumpManager,
-                mTunerService
-        );
-        dialog.init(0, null);
-
-        verify(devicePostureController).addCallback(any());
-        dialog.onPostureChanged(DevicePostureController.DEVICE_POSTURE_OPENED);
+        mDialog.onPostureChanged(DevicePostureController.DEVICE_POSTURE_OPENED);
         mTestableLooper.processAllMessages(); // let dismiss() finish
 
         setOrientation(Configuration.ORIENTATION_PORTRAIT);
 
-        dialog.show(SHOW_REASON_UNKNOWN);
+        mDialog.show(SHOW_REASON_UNKNOWN);
         mTestableLooper.processAllMessages(); // let show() finish before assessing its side-effect
 
-        int gravity = dialog.getWindowGravity();
+        int gravity = mDialog.getWindowGravity();
         assertEquals(Gravity.CENTER_VERTICAL, gravity & Gravity.VERTICAL_GRAVITY_MASK);
     }
 
     @Test
     public void ifLandscapeAndHalfOpen_drawCenterVertically() {
-        DevicePostureController devicePostureController = mock(DevicePostureController.class);
-        when(devicePostureController.getDevicePosture())
-                .thenReturn(DevicePostureController.DEVICE_POSTURE_CLOSED);
-
-        VolumeDialogImpl dialog = new VolumeDialogImpl(
-                getContext(),
-                mVolumeDialogController,
-                mAccessibilityMgr,
-                mDeviceProvisionedController,
-                mConfigurationController,
-                mMediaOutputDialogFactory,
-                mVolumePanelFactory,
-                mActivityStarter,
-                mInteractionJankMonitor,
-                mCsdWarningDialogFactory,
-                devicePostureController,
-                mTestableLooper.getLooper(),
-                mDumpManager,
-                mTunerService
-        );
-        dialog.init(0, null);
-
-        verify(devicePostureController).addCallback(any());
-        dialog.onPostureChanged(DevicePostureController.DEVICE_POSTURE_HALF_OPENED);
+        mDialog.onPostureChanged(DevicePostureController.DEVICE_POSTURE_HALF_OPENED);
         mTestableLooper.processAllMessages(); // let dismiss() finish
 
         setOrientation(Configuration.ORIENTATION_LANDSCAPE);
 
-        dialog.show(SHOW_REASON_UNKNOWN);
+        mDialog.show(SHOW_REASON_UNKNOWN);
         mTestableLooper.processAllMessages(); // let show() finish before assessing its side-effect
 
-        int gravity = dialog.getWindowGravity();
+        int gravity = mDialog.getWindowGravity();
         assertEquals(Gravity.CENTER_VERTICAL, gravity & Gravity.VERTICAL_GRAVITY_MASK);
     }
 
@@ -486,28 +540,8 @@ public class VolumeDialogImplTest extends SysuiTestCase {
 
     @Test
     public void dialogDestroy_removesPostureControllerCallback() {
-        VolumeDialogImpl dialog = new VolumeDialogImpl(
-                getContext(),
-                mVolumeDialogController,
-                mAccessibilityMgr,
-                mDeviceProvisionedController,
-                mConfigurationController,
-                mMediaOutputDialogFactory,
-                mVolumePanelFactory,
-                mActivityStarter,
-                mInteractionJankMonitor,
-                mCsdWarningDialogFactory,
-                mPostureController,
-                mTestableLooper.getLooper(),
-                mDumpManager,
-                mTunerService
-        );
-        dialog.init(0, null);
-
         verify(mPostureController, never()).removeCallback(any());
-
-        dialog.destroy();
-
+        mDialog.destroy();
         verify(mPostureController).removeCallback(any());
     }
 
@@ -519,14 +553,132 @@ public class VolumeDialogImplTest extends SysuiTestCase {
         }
     }
 
+    private enum RingerDrawerState {INIT, OPEN, CLOSE}
+
+    @Test
+    public void ringerModeNormal_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_NORMAL, RingerDrawerState.INIT);
+    }
+
+    @Test
+    public void ringerModeSilent_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_SILENT, RingerDrawerState.INIT);
+    }
+
+    @Test
+    public void ringerModeVibrate_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_VIBRATE, RingerDrawerState.INIT);
+    }
+
+    @Test
+    public void ringerModeNormal_openDrawer_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_NORMAL, RingerDrawerState.OPEN);
+    }
+
+    @Test
+    public void ringerModeSilent_openDrawer_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_SILENT, RingerDrawerState.OPEN);
+    }
+
+    @Test
+    public void ringerModeVibrate_openDrawer_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_VIBRATE, RingerDrawerState.OPEN);
+    }
+
+    @Test
+    public void ringerModeNormal_closeDrawer_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_NORMAL, RingerDrawerState.CLOSE);
+    }
+
+    @Test
+    public void ringerModeSilent_closeDrawer_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_SILENT, RingerDrawerState.CLOSE);
+    }
+
+    @Test
+    public void ringerModeVibrate_closeDrawer_ringerContainerDescribesItsState() {
+        assertRingerContainerDescribesItsState(RINGER_MODE_VIBRATE, RingerDrawerState.CLOSE);
+    }
+
+    @Test
+    public void testOnCaptionEnabledStateChanged_checkBeforeSwitchTrue_setCaptionsEnabledState() {
+        ArgumentCaptor<VolumeDialogController.Callbacks> controllerCallbackCapture =
+                ArgumentCaptor.forClass(VolumeDialogController.Callbacks.class);
+        verify(mVolumeDialogController).addCallback(controllerCallbackCapture.capture(), any());
+        VolumeDialogController.Callbacks callbacks = controllerCallbackCapture.getValue();
+
+        callbacks.onCaptionEnabledStateChanged(true, true);
+        verify(mVolumeDialogController).setCaptionsEnabledState(eq(false));
+    }
+
+    @Test
+    public void testOnCaptionEnabledStateChanged_checkBeforeSwitchFalse_getCaptionsEnabledTrue() {
+        ArgumentCaptor<VolumeDialogController.Callbacks> controllerCallbackCapture =
+                ArgumentCaptor.forClass(VolumeDialogController.Callbacks.class);
+        verify(mVolumeDialogController).addCallback(controllerCallbackCapture.capture(), any());
+        VolumeDialogController.Callbacks callbacks = controllerCallbackCapture.getValue();
+
+        callbacks.onCaptionEnabledStateChanged(true, false);
+        assertTrue(mODICaptionsIcon.getCaptionsEnabled());
+    }
+
+    /**
+     * The content description should include ringer state, and the correct one.
+     */
+    private void assertRingerContainerDescribesItsState(int ringerMode,
+            RingerDrawerState drawerState) {
+        State state = createShellState();
+        state.ringerModeInternal = ringerMode;
+        mFeatureFlags.set(ONE_WAY_HAPTICS_API_MIGRATION, true);
+        mDialog.onStateChangedH(state);
+
+        mDialog.show(SHOW_REASON_UNKNOWN);
+
+        if (drawerState != RingerDrawerState.INIT) {
+            // in both cases we first open the drawer
+            mDialog.toggleRingerDrawer(true);
+
+            if (drawerState == RingerDrawerState.CLOSE) {
+                mDialog.toggleRingerDrawer(false);
+            }
+        }
+
+        String ringerContainerDescription = mDialog.getSelectedRingerContainerDescription();
+        assumeNotNull(ringerContainerDescription);
+
+        String ringerDescription = mContext.getString(
+                mDialog.getStringDescriptionResourceForRingerMode(ringerMode));
+
+        if (drawerState == RingerDrawerState.OPEN) {
+            assertEquals(ringerDescription, ringerContainerDescription);
+        } else {
+            assertNotSame(ringerDescription, ringerContainerDescription);
+            assertTrue(ringerContainerDescription.startsWith(ringerDescription));
+        }
+    }
+
     @After
     public void teardown() {
-        if (mDialog != null) {
-            mDialog.clearInternalHandlerAfterTest();
-        }
+        // Detailed logs to track down timeout issues in b/299491332
+        Log.d(TAG, "teardown: entered");
         setOrientation(mOriginalOrientation);
+        Log.d(TAG, "teardown: after setOrientation");
+        mAnimatorTestRule.advanceTimeBy(mLongestHideShowAnimationDuration);
+        Log.d(TAG, "teardown: after advanceTimeBy");
+        mTestableLooper.moveTimeForward(mLongestHideShowAnimationDuration);
+        Log.d(TAG, "teardown: after moveTimeForward");
         mTestableLooper.processAllMessages();
+        Log.d(TAG, "teardown: after processAllMessages");
         reset(mPostureController);
+        Log.d(TAG, "teardown: after reset");
+        cleanUp(mDialog);
+        Log.d(TAG, "teardown: after cleanUp");
+    }
+
+    private void cleanUp(VolumeDialogImpl dialog) {
+        if (dialog != null) {
+            dialog.clearInternalHandlerAfterTest();
+        }
     }
 
 /*
