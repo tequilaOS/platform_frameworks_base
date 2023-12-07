@@ -2077,34 +2077,6 @@ public class SettingsProvider extends ContentProvider {
         return true;
     }
 
-    private boolean isValidAudioUri(String name, String uri) {
-        if (uri != null) {
-            Uri audioUri = Uri.parse(uri);
-            if (Settings.AUTHORITY.equals(
-                    ContentProvider.getAuthorityWithoutUserId(audioUri.getAuthority()))) {
-                // Don't accept setting the default uri to self-referential URIs like
-                // Settings.System.DEFAULT_RINGTONE_URI, which is an alias to the value of this
-                // setting.
-                return false;
-            }
-            final String mimeType = getContext().getContentResolver().getType(audioUri);
-            if (mimeType == null) {
-                Slog.e(LOG_TAG,
-                        "mutateSystemSetting for setting: " + name + " URI: " + audioUri
-                        + " ignored: failure to find mimeType (no access from this context?)");
-                return false;
-            }
-            if (!(mimeType.startsWith("audio/") || mimeType.equals("application/ogg")
-                    || mimeType.equals("application/x-flac"))) {
-                Slog.e(LOG_TAG,
-                        "mutateSystemSetting for setting: " + name + " URI: " + audioUri
-                        + " ignored: associated mimeType: " + mimeType + " is not an audio type");
-                return false;
-            }
-        }
-        return true;
-    }
-
     private boolean hasWriteSecureSettingsPermission() {
         // Write secure settings is a more protected permission. If caller has it we are good.
         return getContext().checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
