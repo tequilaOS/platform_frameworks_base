@@ -3559,7 +3559,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         // Specific device key handling
         if (dispatchKeyToKeyHandlers(event)) {
-            return -1;
+            return false;
         }
 
         // Reserve all the META modifier combos for system behavior
