@@ -54,9 +54,6 @@ public class PixelPropsUtils {
     private static final String[] sCertifiedProps =
     Resources.getSystem().getStringArray(R.array.config_certifiedBuildProperties);
 
-    private static final String sNetflixModel =
-    Resources.getSystem().getString(R.string.config_netflixSpoofModel);
-
     private static final Map<String, Object> propsToChangeGeneric;
     private static final Map<String, Object> propsToChangePixel8Pro;
     private static final Map<String, Object> propsToChangePixel5a;
@@ -261,11 +258,6 @@ public class PixelPropsUtils {
             // Set proper indexing fingerprint
             if (packageName.equals("com.google.android.settings.intelligence")) {
                 setPropValue("FINGERPRINT", Build.VERSION.INCREMENTAL);
-            }
-            if (!sNetflixModel.isEmpty() && packageName.equals("com.netflix.mediaclient")) {
-                dlog("Setting model to " + sNetflixModel + " for Netflix");
-                setPropValue("MODEL", sNetflixModel);
-                return;
             }
         }
     }
