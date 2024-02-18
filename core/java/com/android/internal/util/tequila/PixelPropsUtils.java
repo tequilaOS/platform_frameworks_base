@@ -61,6 +61,7 @@ public class PixelPropsUtils {
     private static final Map<String, ArrayList<String>> propsToKeep;
 
     private static final String[] packagesToChangePixel8Pro = {
+            "com.google.android.apps.bard",
             "com.google.android.apps.wallpaper.pixel",
             "com.google.android.apps.wallpaper",
             "com.google.pixel.livewallpaper",
