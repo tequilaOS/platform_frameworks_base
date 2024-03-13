@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import com.android.internal.util.tequila.PixelPropsUtils;
+import com.android.internal.util.tequila.GamesPropsUtils;
 
 /**
  * Base class for implementing application instrumentation code.  When running
@@ -1285,6 +1286,7 @@ public class Instrumentation {
         app.attach(context);
         String packageName = context.getPackageName();
         PixelPropsUtils.setProps(packageName);
+        GamesPropsUtils.setProps(packageName);
         return app;
     }
     
@@ -1304,6 +1306,7 @@ public class Instrumentation {
         app.attach(context);
         String packageName = context.getPackageName();
         PixelPropsUtils.setProps(packageName);
+        GamesPropsUtils.setProps(packageName);
         return app;
     }
 
